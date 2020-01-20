@@ -1,4 +1,4 @@
-package common
+package rpc
 
 import (
 	"os"
@@ -385,24 +385,24 @@ func TestGetArgumentsErrorPosition(t *testing.T) {
 	fn2 := func(_ chan bool) {}
 
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn2))).Equals(0)
-	fn3 := func(ctx RPCContext, _ bool, _ chan bool) {}
+	fn3 := func(ctx Context, _ bool, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn3))).Equals(2)
-	fn4 := func(ctx RPCContext, _ int64, _ chan bool) {}
+	fn4 := func(ctx Context, _ int64, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn4))).Equals(2)
-	fn5 := func(ctx RPCContext, _ uint64, _ chan bool) {}
+	fn5 := func(ctx Context, _ uint64, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn5))).Equals(2)
-	fn6 := func(ctx RPCContext, _ float64, _ chan bool) {}
+	fn6 := func(ctx Context, _ float64, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn6))).Equals(2)
-	fn7 := func(ctx RPCContext, _ string, _ chan bool) {}
+	fn7 := func(ctx Context, _ string, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn7))).Equals(2)
-	fn8 := func(ctx RPCContext, _ RPCBytes, _ chan bool) {}
+	fn8 := func(ctx Context, _ Bytes, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn8))).Equals(2)
-	fn9 := func(ctx RPCContext, _ RPCArray, _ chan bool) {}
+	fn9 := func(ctx Context, _ Array, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn9))).Equals(2)
-	fn10 := func(ctx RPCContext, _ RPCMap, _ chan bool) {}
+	fn10 := func(ctx Context, _ Map, _ chan bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn10))).Equals(2)
 
-	fn11 := func(ctx RPCContext, _ bool) {}
+	fn11 := func(ctx Context, _ bool) {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn11))).Equals(-1)
 }
 
@@ -432,39 +432,39 @@ func TestGetFuncKind(t *testing.T) {
 	assert(getFuncKind(fn1)).Equals("", false)
 	fn2 := func(_ chan bool) {}
 	assert(getFuncKind(fn2)).Equals("", false)
-	fn3 := func(ctx RPCContext, _ bool) RPCReturn { return nilReturn }
+	fn3 := func(ctx Context, _ bool) Return { return nilReturn }
 	assert(getFuncKind(fn3)).Equals("B", true)
-	fn4 := func(ctx RPCContext, _ int64) RPCReturn { return nilReturn }
+	fn4 := func(ctx Context, _ int64) Return { return nilReturn }
 	assert(getFuncKind(fn4)).Equals("I", true)
-	fn5 := func(ctx RPCContext, _ uint64) RPCReturn { return nilReturn }
+	fn5 := func(ctx Context, _ uint64) Return { return nilReturn }
 	assert(getFuncKind(fn5)).Equals("U", true)
-	fn6 := func(ctx RPCContext, _ float64) RPCReturn { return nilReturn }
+	fn6 := func(ctx Context, _ float64) Return { return nilReturn }
 	assert(getFuncKind(fn6)).Equals("F", true)
-	fn7 := func(ctx RPCContext, _ string) RPCReturn { return nilReturn }
+	fn7 := func(ctx Context, _ string) Return { return nilReturn }
 	assert(getFuncKind(fn7)).Equals("S", true)
-	fn8 := func(ctx RPCContext, _ RPCBytes) RPCReturn { return nilReturn }
+	fn8 := func(ctx Context, _ Bytes) Return { return nilReturn }
 	assert(getFuncKind(fn8)).Equals("X", true)
-	fn9 := func(ctx RPCContext, _ RPCArray) RPCReturn { return nilReturn }
+	fn9 := func(ctx Context, _ Array) Return { return nilReturn }
 	assert(getFuncKind(fn9)).Equals("A", true)
-	fn10 := func(ctx RPCContext, _ RPCMap) RPCReturn { return nilReturn }
+	fn10 := func(ctx Context, _ Map) Return { return nilReturn }
 	assert(getFuncKind(fn10)).Equals("M", true)
 
-	fn11 := func(ctx RPCContext) RPCReturn { return nilReturn }
+	fn11 := func(ctx Context) Return { return nilReturn }
 	assert(getFuncKind(fn11)).Equals("", true)
 
 	// no return
-	fn12 := func(ctx RPCContext, _ bool) {}
+	fn12 := func(ctx Context, _ bool) {}
 	assert(getFuncKind(fn12)).Equals("", false)
 
 	// value type not supported
-	fn13 := func(ctx RPCContext, _ chan bool) RPCReturn { return nilReturn }
+	fn13 := func(ctx Context, _ chan bool) Return { return nilReturn }
 	assert(getFuncKind(fn13)).Equals("", false)
 
 	fn14 := func(
-		ctx RPCContext,
+		ctx Context,
 		_ bool, _ int64, _ uint64, _ float64, _ string,
-		_ RPCBytes, _ RPCArray, _ RPCMap,
-	) RPCReturn {
+		_ Bytes, _ Array, _ Map,
+	) Return {
 		return nilReturn
 	}
 	assert(getFuncKind(fn14)).Equals("BIUFSXAM", true)

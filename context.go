@@ -1,4 +1,4 @@
-package common
+package rpc
 
 import (
 	"fmt"
@@ -37,7 +37,7 @@ func (p *rpcContext) writeError(message string, debug string) *rpcReturn {
 	return nilReturn
 }
 
-// OK get success RPCReturn  by value
+// OK get success Return  by value
 func (p *rpcContext) OK(value interface{}) *rpcReturn {
 	if thread := p.getThread(); thread != nil {
 		stream := thread.outStream

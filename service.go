@@ -1,4 +1,4 @@
-package common
+package rpc
 
 type rpcEchoMeta struct {
 	name    string      // the name of echo

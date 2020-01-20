@@ -1,4 +1,4 @@
-package common
+package rpc
 
 // RPCError ...
 type RPCError interface {

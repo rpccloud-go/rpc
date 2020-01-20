@@ -1,4 +1,4 @@
-package common
+package rpc
 
 import (
 	"fmt"
@@ -36,48 +36,48 @@ func (p *fnCache) writeHeader(
 		}
 	}
 	sb.AppendFormat("package %s\n\n", pkgName)
-	sb.AppendString("import \"github.com/tslearn/kzserver/common\"\n\n")
+	sb.AppendString("import \"github.com/rpccloud-go/rpc\"\n\n")
 
 	sb.AppendString("type rpcCache struct{}\n\n")
 
 	sb.AppendString("// NewRPCCache ...\n")
-	sb.AppendString("func NewRPCCache() common.RPCCache {\n")
+	sb.AppendString("func NewRPCCache() rpc.RPCCache {\n")
 	sb.AppendString("\treturn &rpcCache{}\n")
 	sb.AppendString("}\n\n")
 
 	sb.AppendString("// Get ...\n")
 	sb.AppendString(
-		"func (p *rpcCache) Get(fnString string) common.RPCCacheFunc {\n",
+		"func (p *rpcCache) Get(fnString string) rpc.RPCCacheFunc {\n",
 	)
 	sb.AppendString("\treturn getFCache(fnString)\n")
 	sb.AppendString("}\n\n")
 	sb.AppendString("type n = bool\n")
-	sb.AppendString("type o = common.RPCContext\n")
-	sb.AppendString("type p = common.RPCReturn\n")
-	sb.AppendString("type q = *common.RPCStream\n")
+	sb.AppendString("type o = rpc.Context\n")
+	sb.AppendString("type p = rpc.Return\n")
+	sb.AppendString("type q = *rpc.RPCStream\n")
 	if _, ok := kindMap['B']; ok {
-		sb.AppendString("type r = common.RPCBool\n")
+		sb.AppendString("type r = rpc.Bool\n")
 	}
 	if _, ok := kindMap['I']; ok {
-		sb.AppendString("type s = common.RPCInt\n")
+		sb.AppendString("type s = rpc.Int\n")
 	}
 	if _, ok := kindMap['U']; ok {
-		sb.AppendString("type t = common.RPCUint\n")
+		sb.AppendString("type t = rpc.Uint\n")
 	}
 	if _, ok := kindMap['F']; ok {
-		sb.AppendString("type u = common.RPCFloat\n")
+		sb.AppendString("type u = rpc.Float\n")
 	}
 	if _, ok := kindMap['S']; ok {
-		sb.AppendString("type v = common.RPCString\n")
+		sb.AppendString("type v = rpc.String\n")
 	}
 	if _, ok := kindMap['X']; ok {
-		sb.AppendString("type w = common.RPCBytes\n")
+		sb.AppendString("type w = rpc.Bytes\n")
 	}
 	if _, ok := kindMap['A']; ok {
-		sb.AppendString("type x = common.RPCArray\n")
+		sb.AppendString("type x = rpc.Array\n")
 	}
 	if _, ok := kindMap['M']; ok {
-		sb.AppendString("type y = common.RPCMap\n")
+		sb.AppendString("type y = rpc.Map\n")
 	}
 	sb.AppendString("type z = interface{}\n\n")
 	sb.AppendString("const af = false\n")
@@ -85,7 +85,7 @@ func (p *fnCache) writeHeader(
 }
 
 func (p *fnCache) writeGetFunc(sb *StringBuilder, kinds []string) {
-	sb.AppendString("\nfunc getFCache(fnString string) common.RPCCacheFunc {\n")
+	sb.AppendString("\nfunc getFCache(fnString string) rpc.RPCCacheFunc {\n")
 	sb.AppendString("\tswitch fnString {\n")
 
 	for _, kind := range kinds {

@@ -1,12 +1,12 @@
-package common
+package rpc
 
 import (
 	"reflect"
 )
 
 var (
-	nilContext  = RPCContext(nil)
-	nilReturn   = RPCReturn(nil)
+	nilContext  = Context(nil)
+	nilReturn   = Return(nil)
 	contextType = reflect.ValueOf(nilContext).Type()
 	returnType  = reflect.ValueOf(nilReturn).Type()
 	boolType    = reflect.ValueOf(true).Type()
@@ -14,9 +14,9 @@ var (
 	uint64Type  = reflect.ValueOf(uint64(0)).Type()
 	float64Type = reflect.ValueOf(float64(0)).Type()
 	stringType  = reflect.ValueOf("").Type()
-	bytesType   = reflect.ValueOf(RPCBytes{}).Type()
-	arrayType   = reflect.ValueOf(RPCArray{}).Type()
-	mapType     = reflect.ValueOf(RPCMap{}).Type()
+	bytesType   = reflect.ValueOf(Bytes{}).Type()
+	arrayType   = reflect.ValueOf(Array{}).Type()
+	mapType     = reflect.ValueOf(Map{}).Type()
 )
 
 // RPCCache ...
@@ -50,38 +50,38 @@ type Service interface {
 	) Service
 }
 
-// RPCContext ...
-type RPCContext = *rpcContext
+// Context ...
+type Context = *rpcContext
 
-// RPCBool ...
-type RPCBool = bool
+// Bool ...
+type Bool = bool
 
-// RPCInt ...
-type RPCInt = int64
+// Int ...
+type Int = int64
 
-// RPCUint ...
-type RPCUint = uint64
+// Uint ...
+type Uint = uint64
 
-// RPCFloat ...
-type RPCFloat = float64
+// Float ...
+type Float = float64
 
-// RPCString ...
-type RPCString = string
+// String ...
+type String = string
 
-// RPCBytes ...
-type RPCBytes = []byte
+// Bytes ...
+type Bytes = []byte
 
-// RPCArray ...
-type RPCArray = []interface{}
+// Array ...
+type Array = []interface{}
 
-// RPCMap common Map type
-type RPCMap = map[string]interface{}
+// Map common Map type
+type Map = map[string]interface{}
 
-// RPCAny ...
-type RPCAny = interface{}
+// Any ...
+type Any = interface{}
 
 // rpcReturn is rpc function return type
 type rpcReturn struct{}
 
-// RPCReturn ...
-type RPCReturn = *rpcReturn
+// Return ...
+type Return = *rpcReturn

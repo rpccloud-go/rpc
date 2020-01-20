@@ -1,4 +1,4 @@
-package common
+package rpc
 
 import (
 	"os"
@@ -132,7 +132,7 @@ func TestRPCProcessor_BuildCache(t *testing.T) {
 
 	processor1 := NewRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor1.AddService("abc", NewService().
-		Echo("sayHello", true, func(ctx RPCContext, name string) RPCReturn {
+		Echo("sayHello", true, func(ctx Context, name string) Return {
 			return ctx.OK("hello " + name)
 		}), "")
 	assert(processor1.BuildCache(
@@ -144,7 +144,7 @@ func TestRPCProcessor_BuildCache(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/processor-build-cache-1.go")))
 
-	_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
+	//	_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
 }
 
 func TestRPCProcessor_mountNode(t *testing.T) {
@@ -232,7 +232,7 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 	// OK
 	service2 := NewService()
 	service2.AddService("user", NewService().
-		Echo("sayHello", true, func(ctx RPCContext) RPCReturn {
+		Echo("sayHello", true, func(ctx Context) Return {
 			return ctx.OK(true)
 		}))
 	assert(processor.mountNode(rootName, &rpcNodeMeta{
@@ -275,13 +275,13 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 	_ = processor.mountEcho(rootNode, &rpcEchoMeta{
 		"testOccupied",
 		true,
-		func(ctx RPCContext) RPCReturn { return ctx.OK(true) },
+		func(ctx Context) Return { return ctx.OK(true) },
 		"DebugMessage",
 	})
 	assert(processor.mountEcho(rootNode, &rpcEchoMeta{
 		"testOccupied",
 		true,
-		func(ctx RPCContext) RPCReturn { return ctx.OK(true) },
+		func(ctx Context) Return { return ctx.OK(true) },
 		"DebugMessage",
 	})).Equals(NewRPCErrorByDebug(
 		"Echo name testOccupied is duplicated",
@@ -314,7 +314,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 	assert(processor.mountEcho(rootNode, &rpcEchoMeta{
 		"testEchoHandlerArguments",
 		true,
-		func(ctx bool) RPCReturn { return nilReturn },
+		func(ctx bool) Return { return nilReturn },
 		"DebugMessage",
 	})).Equals(NewRPCErrorByDebug(
 		"Echo handler 1st argument type must be rpc.Context",
@@ -324,7 +324,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 	assert(processor.mountEcho(rootNode, &rpcEchoMeta{
 		"testEchoHandlerArguments",
 		true,
-		func(ctx RPCContext, ch chan bool) RPCReturn { return nilReturn },
+		func(ctx Context, ch chan bool) Return { return nilReturn },
 		"DebugMessage",
 	})).Equals(NewRPCErrorByDebug(
 		"Echo handler 2nd argument type <chan bool> not supported",
@@ -335,7 +335,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 	assert(processor.mountEcho(rootNode, &rpcEchoMeta{
 		"testEchoHandlerReturn",
 		true,
-		func(ctx RPCContext) (RPCReturn, bool) { return nilReturn, true },
+		func(ctx Context) (Return, bool) { return nilReturn, true },
 		"DebugMessage",
 	})).Equals(NewRPCErrorByDebug(
 		"Echo handler return type must be rpc.Return",
@@ -345,7 +345,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 	assert(processor.mountEcho(rootNode, &rpcEchoMeta{
 		"testEchoHandlerReturn",
 		true,
-		func(ctx RPCContext) bool { return true },
+		func(ctx Context) bool { return true },
 		"DebugMessage",
 	})).Equals(NewRPCErrorByDebug(
 		"Echo handler return type must be rpc.Return",
@@ -362,7 +362,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 	assert(processor.mountEcho(rootNode, &rpcEchoMeta{
 		"testOK",
 		true,
-		func(ctx RPCContext, _ bool, _ RPCMap) RPCReturn { return nilReturn },
+		func(ctx Context, _ bool, _ Map) Return { return nilReturn },
 		GetStackString(0),
 	})).IsNil()
 
@@ -442,7 +442,7 @@ func BenchmarkRpcProcessor_Execute(b *testing.B) {
 			Echo("sayHello", true, func(
 				ctx *rpcContext,
 				name string,
-			) RPCReturn {
+			) Return {
 				return ctx.OK(name)
 			}),
 		"",
