@@ -29,7 +29,7 @@ type rpcEchoNode struct {
 	serviceNode *rpcServiceNode
 	path        string
 	echoMeta    *rpcEchoMeta
-	cacheFN     RPCCacheFunc
+	cacheFN     FuncCacheType
 	reflectFn   reflect.Value
 	callString  string
 	debugString string
@@ -47,7 +47,7 @@ type rpcServiceNode struct {
 type RPCProcessor struct {
 	isRunning    bool
 	logger       *Logger
-	fnCache      RPCCache
+	fnCache      FuncCache
 	callback     fnProcessorCallback
 	echosMap     map[string]*rpcEchoNode
 	nodesMap     map[string]*rpcServiceNode
@@ -67,7 +67,7 @@ func NewRPCProcessor(
 	maxNodeDepth uint,
 	maxCallDepth uint,
 	callback fnProcessorCallback,
-	fnCache RPCCache,
+	fnCache FuncCache,
 ) *RPCProcessor {
 	numOfThreadPool := uint32(fnGetRuntimeNumberOfCPU() * numOfThreadPoolPerCore)
 	if numOfThreadPool < numOfMinThreadPool {
@@ -383,7 +383,7 @@ func (p *RPCProcessor) mountEcho(
 	}
 	argString := strings.Join(argStrings, ", ")
 
-	cacheFN := RPCCacheFunc(nil)
+	cacheFN := FuncCacheType(nil)
 	if fnTypeString, ok := getFuncKind(echoMeta.handler); ok && p.fnCache != nil {
 		cacheFN = p.fnCache.Get(fnTypeString)
 	}

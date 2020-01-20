@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"os"
 	"path"
 	"runtime"
 	"testing"
@@ -9,7 +8,7 @@ import (
 
 type TestFuncCache struct{}
 
-func (p *TestFuncCache) Get(fnString string) RPCCacheFunc {
+func (p *TestFuncCache) Get(fnString string) FuncCacheType {
 	switch fnString {
 	case "S":
 		return func(c *rpcContext, s *RPCStream, f interface{}) bool {
@@ -69,7 +68,7 @@ func TestFnCache_basic(t *testing.T) {
 
 	processor3 := NewRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor3.AddService("abc", NewService().
-		Echo("sayHello", true, func(ctx Context, _ Int) Return {
+		Echo("sayHello", true, func(ctx Context, _ Int64) Return {
 			return ctx.OK(true)
 		}), "")
 	assert(processor3.BuildCache(
@@ -83,7 +82,7 @@ func TestFnCache_basic(t *testing.T) {
 
 	processor4 := NewRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor4.AddService("abc", NewService().
-		Echo("sayHello", true, func(ctx Context, _ Uint) Return {
+		Echo("sayHello", true, func(ctx Context, _ Uint64) Return {
 			return ctx.OK(true)
 		}), "")
 	assert(processor4.BuildCache(
@@ -97,7 +96,7 @@ func TestFnCache_basic(t *testing.T) {
 
 	processor5 := NewRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor5.AddService("abc", NewService().
-		Echo("sayHello", true, func(ctx Context, _ Float) Return {
+		Echo("sayHello", true, func(ctx Context, _ Float64) Return {
 			return ctx.OK(true)
 		}), "")
 	assert(processor5.BuildCache(
@@ -168,7 +167,7 @@ func TestFnCache_basic(t *testing.T) {
 	processor10 := NewRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor10.AddService("abc", NewService().
 		Echo("sayHello", true, func(
-			ctx Context, _ Bool, _ Int, _ Uint, _ Float, _ String,
+			ctx Context, _ Bool, _ Int64, _ Uint64, _ Float64, _ String,
 			_ Bytes, _ Array, _ Map,
 		) Return {
 			return ctx.OK(true)
@@ -182,5 +181,5 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-10.go")))
 
-	_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
+	//_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
 }

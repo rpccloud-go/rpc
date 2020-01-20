@@ -301,10 +301,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Int, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Called: $.user:sayHello(rpc.Context, rpc.Int64, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()
@@ -341,10 +341,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Bool, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Bool, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()
@@ -381,10 +381,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Bool, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Bool, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()
@@ -421,10 +421,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
+				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
 				"rpc.Bool, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()
@@ -461,10 +461,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.Bool, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.Bool, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return\n"+
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()
@@ -501,10 +501,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bool, rpc.Array, rpc.Map) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bool, rpc.Array, rpc.Map) rpc.Return\n"+
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()
@@ -541,10 +541,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Bool, rpc.Map) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Bool, rpc.Map) rpc.Return\n"+
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()
@@ -581,10 +581,10 @@ func TestRpcThread_eval(t *testing.T) {
 			assert(success).IsFalse()
 			assert(out.ReadBool()).Equals(false, true)
 			assert(out.Read()).Equals("rpc echo arguments not match\n"+
-				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Bool) rpc.Return\n"+
-				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int, rpc.Uint, "+
-				"rpc.Float, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
+				"Called: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Bool) rpc.Return\n"+
+				"Required: $.user:sayHello(rpc.Context, rpc.Bool, rpc.Int64, rpc.Uint64, "+
+				"rpc.Float64, rpc.String, rpc.Bytes, rpc.Array, rpc.Map) rpc.Return",
 				true,
 			)
 			dbgMessage, ok := out.Read()

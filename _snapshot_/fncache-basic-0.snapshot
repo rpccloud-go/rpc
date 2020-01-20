@@ -1,29 +1,21 @@
 package pkgName
 
-import "github.com/tslearn/kzserver/common"
+import "github.com/rpccloud-go/rpc"
 
 type rpcCache struct{}
 
 // NewRPCCache ...
-func NewRPCCache() common.RPCCache {
+func NewRPCCache() rpc.FuncCache {
 	return &rpcCache{}
 }
 
 // Get ...
-func (p *rpcCache) Get(fnString string) common.RPCCacheFunc {
+func (p *rpcCache) Get(fnString string) rpc.FuncCacheType {
 	return getFCache(fnString)
 }
 
-type n = bool
-type o = common.RPCContext
-type p = common.RPCReturn
-type q = *common.RPCStream
-type z = interface{}
 
-const af = false
-const at = true
-
-func getFCache(fnString string) common.RPCCacheFunc {
+func getFCache(fnString string) rpc.FuncCacheType {
 	switch fnString {
 	}
 

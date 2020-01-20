@@ -29,10 +29,12 @@ func (p *fnCache) writeHeader(
 	sb *StringBuilder,
 	kinds []string,
 ) {
+	hasFunc := false
 	kindMap := make(map[int32]bool)
 	for _, kind := range kinds {
 		for _, char := range kind {
 			kindMap[char] = true
+			hasFunc = true
 		}
 	}
 	sb.AppendFormat("package %s\n\n", pkgName)
@@ -41,31 +43,33 @@ func (p *fnCache) writeHeader(
 	sb.AppendString("type rpcCache struct{}\n\n")
 
 	sb.AppendString("// NewRPCCache ...\n")
-	sb.AppendString("func NewRPCCache() rpc.RPCCache {\n")
+	sb.AppendString("func NewRPCCache() rpc.FuncCache {\n")
 	sb.AppendString("\treturn &rpcCache{}\n")
 	sb.AppendString("}\n\n")
 
 	sb.AppendString("// Get ...\n")
 	sb.AppendString(
-		"func (p *rpcCache) Get(fnString string) rpc.RPCCacheFunc {\n",
+		"func (p *rpcCache) Get(fnString string) rpc.FuncCacheType {\n",
 	)
 	sb.AppendString("\treturn getFCache(fnString)\n")
 	sb.AppendString("}\n\n")
-	sb.AppendString("type n = bool\n")
-	sb.AppendString("type o = rpc.Context\n")
-	sb.AppendString("type p = rpc.Return\n")
-	sb.AppendString("type q = *rpc.RPCStream\n")
+	if hasFunc {
+		sb.AppendString("type n = bool\n")
+		sb.AppendString("type o = rpc.Context\n")
+		sb.AppendString("type p = rpc.Return\n")
+		sb.AppendString("type q = *rpc.RPCStream\n")
+	}
 	if _, ok := kindMap['B']; ok {
 		sb.AppendString("type r = rpc.Bool\n")
 	}
 	if _, ok := kindMap['I']; ok {
-		sb.AppendString("type s = rpc.Int\n")
+		sb.AppendString("type s = rpc.Int64\n")
 	}
 	if _, ok := kindMap['U']; ok {
-		sb.AppendString("type t = rpc.Uint\n")
+		sb.AppendString("type t = rpc.Uint64\n")
 	}
 	if _, ok := kindMap['F']; ok {
-		sb.AppendString("type u = rpc.Float\n")
+		sb.AppendString("type u = rpc.Float64\n")
 	}
 	if _, ok := kindMap['S']; ok {
 		sb.AppendString("type v = rpc.String\n")
@@ -79,13 +83,15 @@ func (p *fnCache) writeHeader(
 	if _, ok := kindMap['M']; ok {
 		sb.AppendString("type y = rpc.Map\n")
 	}
-	sb.AppendString("type z = interface{}\n\n")
-	sb.AppendString("const af = false\n")
-	sb.AppendString("const at = true\n")
+	if hasFunc {
+		sb.AppendString("type z = interface{}\n\n")
+		sb.AppendString("const af = false\n")
+		sb.AppendString("const at = true\n")
+	}
 }
 
 func (p *fnCache) writeGetFunc(sb *StringBuilder, kinds []string) {
-	sb.AppendString("\nfunc getFCache(fnString string) rpc.RPCCacheFunc {\n")
+	sb.AppendString("\nfunc getFCache(fnString string) rpc.FuncCacheType {\n")
 	sb.AppendString("\tswitch fnString {\n")
 
 	for _, kind := range kinds {

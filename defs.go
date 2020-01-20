@@ -19,13 +19,13 @@ var (
 	mapType     = reflect.ValueOf(Map{}).Type()
 )
 
-// RPCCache ...
-type RPCCache interface {
-	Get(fnString string) RPCCacheFunc
+// FuncCache ...
+type FuncCache interface {
+	Get(fnString string) FuncCacheType
 }
 
-// RPCCacheFunc ...
-type RPCCacheFunc = func(
+// FuncCacheType ...
+type FuncCacheType = func(
 	ctx *rpcContext,
 	stream *RPCStream,
 	fn interface{},
@@ -56,14 +56,14 @@ type Context = *rpcContext
 // Bool ...
 type Bool = bool
 
-// Int ...
-type Int = int64
+// Int64 ...
+type Int64 = int64
 
-// Uint ...
-type Uint = uint64
+// Uint64 ...
+type Uint64 = uint64
 
-// Float ...
-type Float = float64
+// Float64 ...
+type Float64 = float64
 
 // String ...
 type String = string

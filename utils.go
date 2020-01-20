@@ -464,11 +464,11 @@ func convertTypeToString(reflectType reflect.Type) string {
 	case boolType:
 		return "rpc.Bool"
 	case int64Type:
-		return "rpc.Int"
+		return "rpc.Int64"
 	case uint64Type:
-		return "rpc.Uint"
+		return "rpc.Uint64"
 	case float64Type:
-		return "rpc.Float"
+		return "rpc.Float64"
 	case stringType:
 		return "rpc.String"
 	default:
