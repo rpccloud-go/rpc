@@ -11,7 +11,7 @@ import (
 )
 
 func TestNewRPCProcessor(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	logger := NewLogger()
 	callbackFn := func(stream *RPCStream, success bool) {}
@@ -60,7 +60,7 @@ func TestNewRPCProcessor(t *testing.T) {
 }
 
 func TestRPCProcessor_Start_Stop(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	processor := NewRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor.Stop()).IsFalse()
@@ -91,7 +91,7 @@ func TestRPCProcessor_Start_Stop(t *testing.T) {
 }
 
 func TestRPCProcessor_PutStream(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	processor := NewRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor.PutStream(NewRPCStream())).IsFalse()
 	processor.Start()
@@ -103,7 +103,7 @@ func TestRPCProcessor_PutStream(t *testing.T) {
 }
 
 func TestRPCProcessor_AddService(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	processor := NewRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor.AddService("test", nil, "DebugMessage")).
@@ -117,7 +117,7 @@ func TestRPCProcessor_AddService(t *testing.T) {
 }
 
 func TestRPCProcessor_BuildCache(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	_, file, _, _ := runtime.Caller(0)
 
 	processor0 := NewRPCProcessor(nil, 16, 32, nil, nil)
@@ -148,7 +148,7 @@ func TestRPCProcessor_BuildCache(t *testing.T) {
 }
 
 func TestRPCProcessor_mountNode(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	processor := NewRPCProcessor(nil, 16, 16, nil, nil)
 
@@ -243,7 +243,7 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 }
 
 func TestRPCProcessor_mountEcho(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	processor := NewRPCProcessor(nil, 16, 16, nil, &TestFuncCache{})
 	rootNode := processor.nodesMap[rootName]
@@ -385,7 +385,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 }
 
 func TestRPCProcessor_OutPutErrors(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	processor := NewRPCProcessor(nil, 16, 16, nil, nil)
 

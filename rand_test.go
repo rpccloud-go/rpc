@@ -5,7 +5,7 @@ import (
 )
 
 func TestGetRandUint32(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	sum := int64(0)
 	for i := 0; i < 100000; i++ {
 		sum += int64(GetRandUint32())
@@ -15,7 +15,7 @@ func TestGetRandUint32(t *testing.T) {
 }
 
 func TestGetRandString(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(GetRandString(-1)).Equals("")
 	for i := 0; i < 100; i++ {
 		assert(len(GetRandString(i))).Equals(i)

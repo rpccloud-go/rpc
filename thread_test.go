@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewThread(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	processor := NewRPCProcessor(nil, 16, 16, nil, nil)
 	threadPool := newThreadPool(processor)
@@ -32,7 +32,7 @@ func TestNewThread(t *testing.T) {
 }
 
 func TestRpcThread_stop(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	thread := newThread(nil)
 	assert(thread.stop()).IsTrue()
 	assert(thread.stop()).IsFalse()
@@ -97,7 +97,7 @@ func runWithProcessor(
 }
 
 func TestRpcThread_eval(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	// test basic
 	runWithProcessor(

@@ -12,7 +12,7 @@ import (
 )
 
 func TestLogSubscription_Close(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	subscription := logger.Subscribe()
@@ -43,14 +43,14 @@ func TestLogSubscription_Close(t *testing.T) {
 }
 
 func TestNewLogger(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 	assert(logger.level).Equals(LogMaskAll)
 	assert(len(logger.subscriptions)).Equals(0)
 }
 
 func TestLogger_SetLevel(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	assert(logger.SetLevel(-1)).IsFalse()
@@ -120,7 +120,7 @@ func TestLogger_SetLevel(t *testing.T) {
 }
 
 func TestLogger_Subscribe(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	subscription := logger.Subscribe()
@@ -137,7 +137,7 @@ func TestLogger_Subscribe(t *testing.T) {
 }
 
 func TestLogger_log(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	var buf bytes.Buffer
@@ -159,7 +159,7 @@ func TestLogger_log(t *testing.T) {
 }
 
 func TestLogger_Debug(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	var buf1 bytes.Buffer
@@ -188,7 +188,7 @@ func TestLogger_Debug(t *testing.T) {
 }
 
 func TestLogger_Info(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	var buf1 bytes.Buffer
@@ -216,7 +216,7 @@ func TestLogger_Info(t *testing.T) {
 }
 
 func TestLogger_Warn(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	var buf1 bytes.Buffer
@@ -244,7 +244,7 @@ func TestLogger_Warn(t *testing.T) {
 }
 
 func TestLogger_Error(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	var buf1 bytes.Buffer
@@ -272,7 +272,7 @@ func TestLogger_Error(t *testing.T) {
 }
 
 func TestLogger_Fatal(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	logger := NewLogger()
 
 	var buf1 bytes.Buffer

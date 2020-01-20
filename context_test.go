@@ -6,7 +6,7 @@ import (
 )
 
 func TestRpcContext_getThread(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	ctx1 := rpcContext{}
 	assert(ctx1.getThread()).IsNil()
@@ -20,7 +20,7 @@ func TestRpcContext_getThread(t *testing.T) {
 }
 
 func TestRpcContext_stop(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	thread := newThread(nil)
 	thread.stop()
@@ -32,7 +32,7 @@ func TestRpcContext_stop(t *testing.T) {
 }
 
 func TestRpcContext_OK(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	// ctx is ok
 	thread := newThread(nil)
@@ -74,7 +74,7 @@ func TestRpcContext_OK(t *testing.T) {
 }
 
 func TestRpcContext_writeError(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	// ctx is ok
 	processor := NewRPCProcessor(NewLogger(), 16, 16, nil, nil)
@@ -104,7 +104,7 @@ func TestRpcContext_writeError(t *testing.T) {
 }
 
 func TestRpcContext_Error(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	// ctx is ok
 	thread := newThread(nil)
@@ -137,7 +137,7 @@ func TestRpcContext_Error(t *testing.T) {
 }
 
 func TestRpcContext_Errorf(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	// ctx is ok
 	thread := newThread(nil)

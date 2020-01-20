@@ -9,7 +9,7 @@ import (
 func runReportAssertFail(fn func()) {
 	ch := make(chan bool, 1)
 	originReportFail := reportAssertFail
-	reportAssertFail = func(p *Assert) {
+	reportAssertFail = func(p *rpcAssert) {
 		ch <- true
 	}
 	fn()
@@ -18,7 +18,7 @@ func runReportAssertFail(fn func()) {
 }
 
 func TestNewAssert(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(assert(3).args[0]).Equals(3)
 	assert(assert(3).t).Equals(t)
@@ -28,7 +28,7 @@ func TestNewAssert(t *testing.T) {
 }
 
 func TestAssert_Fail(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	runReportAssertFail(func() {
 		assert(nil).Fail()
@@ -36,13 +36,13 @@ func TestAssert_Fail(t *testing.T) {
 }
 
 func TestAssert_Equals(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(nil).Equals(nil)
 	assert(3).Equals(3)
 	assert((interface{})(nil)).Equals(nil)
-	assert((*Assert)(nil)).Equals((*Assert)(nil))
+	assert((*rpcAssert)(nil)).Equals((*rpcAssert)(nil))
 	assert(nil).Equals((interface{})(nil))
-	assert(nil).Equals((*Assert)(nil))
+	assert(nil).Equals((*rpcAssert)(nil))
 	assert([]int{1, 2, 3}).Equals([]int{1, 2, 3})
 	assert(map[int]string{3: "OK", 4: "NO"}).
 		Equals(map[int]string{4: "NO", 3: "OK"})
@@ -75,7 +75,7 @@ func TestAssert_Equals(t *testing.T) {
 }
 
 func TestAssert_Contains(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert("hello").Contains("")
 	assert("hello").Contains("o")
 	assert([]byte{1, 2, 3}).Contains([]byte{})
@@ -134,15 +134,15 @@ func TestAssert_Contains(t *testing.T) {
 }
 
 func TestAssert_IsNil(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(nil).IsNil()
-	assert((*Assert)(nil)).IsNil()
+	assert((*rpcAssert)(nil)).IsNil()
 	assert((unsafe.Pointer)(nil)).IsNil()
 	assert(uintptr(0)).IsNil()
 
 	runReportAssertFail(func() {
-		assert(NewAssert(t)).IsNil()
+		assert(newAssert(t)).IsNil()
 	})
 	runReportAssertFail(func() {
 		assert(32).IsNil()
@@ -159,14 +159,14 @@ func TestAssert_IsNil(t *testing.T) {
 }
 
 func TestAssert_IsNotNil(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(t).IsNotNil()
 
 	runReportAssertFail(func() {
 		assert(nil).IsNotNil()
 	})
 	runReportAssertFail(func() {
-		assert((*Assert)(nil)).IsNotNil()
+		assert((*rpcAssert)(nil)).IsNotNil()
 	})
 	runReportAssertFail(func() {
 		assert().IsNotNil()
@@ -174,11 +174,11 @@ func TestAssert_IsNotNil(t *testing.T) {
 }
 
 func TestAssert_IsTrue(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(true).IsTrue()
 
 	runReportAssertFail(func() {
-		assert((*Assert)(nil)).IsTrue()
+		assert((*rpcAssert)(nil)).IsTrue()
 	})
 	runReportAssertFail(func() {
 		assert(32).IsTrue()
@@ -195,7 +195,7 @@ func TestAssert_IsTrue(t *testing.T) {
 }
 
 func TestAssert_IsFalse(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(false).IsFalse()
 
 	runReportAssertFail(func() {
@@ -221,10 +221,10 @@ func (p *testAssertFail) Fail() {
 }
 
 func Test_reportFail(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	ch := make(chan bool, 1)
-	target := NewAssert(t)(3)
+	target := newAssert(t)(3)
 	target.t = &testAssertFail{ch: ch}
 	target.Equals(4)
 

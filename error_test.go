@@ -6,14 +6,14 @@ import (
 )
 
 func TestNewRPCError(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(NewRPCError("hello").GetMessage()).Equals("hello")
 	assert(NewRPCError("hello").GetDebug()).Equals("")
 }
 
 func TestNewRPCErrorByDebug(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	var testCollection = [][2]interface{}{
 		{
@@ -36,7 +36,7 @@ func TestNewRPCErrorByDebug(t *testing.T) {
 }
 
 func TestNewRPCErrorByError(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	// wrap nil error
 	err := NewRPCErrorByError(nil)
@@ -49,7 +49,7 @@ func TestNewRPCErrorByError(t *testing.T) {
 }
 
 func TestRpcError_GetMessage(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	err := &rpcError{
 		message: "message",
@@ -59,7 +59,7 @@ func TestRpcError_GetMessage(t *testing.T) {
 }
 
 func TestRpcError_GetDebug(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	err := &rpcError{
 		message: "message",
@@ -69,7 +69,7 @@ func TestRpcError_GetDebug(t *testing.T) {
 }
 
 func TestRpcError_AddDebug(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	err := &rpcError{
 		message: "message",

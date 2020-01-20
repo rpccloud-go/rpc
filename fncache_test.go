@@ -25,7 +25,7 @@ func (p *TestFuncCache) Get(fnString string) FuncCacheType {
 }
 
 func TestFnCache_basic(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	_, file, _, _ := runtime.Caller(0)
 
 	processor0 := NewRPCProcessor(nil, 16, 32, nil, nil)

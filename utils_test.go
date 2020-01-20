@@ -12,7 +12,7 @@ import (
 )
 
 func TestTimeNowNS(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	for i := 0; i < 500000; i++ {
 		nowNS := TimeNowNS()
@@ -38,14 +38,14 @@ func TestTimeNowNS(t *testing.T) {
 }
 
 func TestTimeNowMS(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	nowNS := TimeNowMS() * int64(time.Millisecond)
 	assert(time.Now().UnixNano()-nowNS < int64(10*time.Millisecond)).IsTrue()
 	assert(time.Now().UnixNano()-nowNS > int64(-10*time.Millisecond)).IsTrue()
 }
 
 func TestTimeNowISOString(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	for i := 0; i < 500; i++ {
 		if nowNS, err := time.Parse(
@@ -85,7 +85,7 @@ func TestTimeNowISOString(t *testing.T) {
 }
 
 func TestTimeSpanFrom(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	ns := TimeNowNS()
 	time.Sleep(50 * time.Millisecond)
 	dur := TimeSpanFrom(ns)
@@ -94,7 +94,7 @@ func TestTimeSpanFrom(t *testing.T) {
 }
 
 func TestTimeSpanBetween(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	start := TimeNowNS()
 	time.Sleep(50 * time.Millisecond)
 	dur := TimeSpanBetween(start, TimeNowNS())
@@ -103,7 +103,7 @@ func TestTimeSpanBetween(t *testing.T) {
 }
 
 func TestGetSeed(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	seed := GetSeed()
 	assert(seed > 10000).IsTrue()
 
@@ -113,7 +113,7 @@ func TestGetSeed(t *testing.T) {
 }
 
 func TestConvertToIsoDateString(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	start, _ := time.Parse(
 		"2006-01-02T15:04:05.999Z07:00",
 		"0001-01-01T00:00:00+00:00",
@@ -167,7 +167,7 @@ func TestConvertToIsoDateString(t *testing.T) {
 }
 
 func TestGetStackString(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(FindLinesByPrefix(
 		GetStackString(0),
 		"-01",
@@ -179,7 +179,7 @@ func TestGetStackString(t *testing.T) {
 }
 
 func TestFindLinesByPrefix(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	ret := FindLinesByPrefix("", "")
 	assert(len(ret)).Equals(1)
@@ -206,7 +206,7 @@ func TestFindLinesByPrefix(t *testing.T) {
 }
 
 func TestGetByteArrayDebugString(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(GetByteArrayDebugString([]byte{})).Equals(
 		"",
 	)
@@ -228,7 +228,7 @@ func TestGetByteArrayDebugString(t *testing.T) {
 }
 
 func TestGetUrlBySchemeHostPortAndPath(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(GetURLBySchemeHostPortAndPath("", "127.0.0.1", 8080, "/world")).
 		Equals("")
@@ -243,7 +243,7 @@ func TestGetUrlBySchemeHostPortAndPath(t *testing.T) {
 }
 
 func TestConvertOrdinalToString(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(ConvertOrdinalToString(0)).Equals("")
 	assert(ConvertOrdinalToString(1)).Equals("1st")
@@ -255,7 +255,7 @@ func TestConvertOrdinalToString(t *testing.T) {
 }
 
 func TestAddPrefixPerLine(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(AddPrefixPerLine("", "")).Equals("")
 	assert(AddPrefixPerLine("a", "")).Equals("a")
@@ -270,7 +270,7 @@ func TestAddPrefixPerLine(t *testing.T) {
 }
 
 func TestTryToInterfaceArray(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(tryToInterfaceArray(nil)).Equals(nil, false)
 	assert(tryToInterfaceArray(([]byte)(nil))).Equals(nil, false)
@@ -282,7 +282,7 @@ func TestTryToInterfaceArray(t *testing.T) {
 }
 
 func TestIsNil(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(isNil(nil)).IsTrue()
 	assert(isNil(t)).IsFalse()
 	assert(isNil(3)).IsFalse()
@@ -294,17 +294,17 @@ func TestIsNil(t *testing.T) {
 }
 
 func TestIsEquals(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(isEquals(nil, nil)).IsTrue()
-	assert(isEquals(nil, (*Assert)(nil))).IsTrue()
+	assert(isEquals(nil, (*rpcAssert)(nil))).IsTrue()
 	assert(isEquals(t, nil)).IsFalse()
 	assert(isEquals(t, t)).IsTrue()
 	assert(isEquals(t, unsafe.Pointer(t))).IsFalse()
 }
 
 func TestIsContains(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(isContains(nil, nil)).IsFalse()
 	assert(isContains(t, nil)).IsFalse()
@@ -337,7 +337,7 @@ func TestIsContains(t *testing.T) {
 }
 
 func TestIsUTF8Bytes(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(IsUTF8Bytes(([]byte)("abc"))).IsTrue()
 	assert(IsUTF8Bytes(([]byte)("abc！#@¥#%#%#¥%"))).IsTrue()
@@ -378,7 +378,7 @@ func TestIsUTF8Bytes(t *testing.T) {
 }
 
 func TestGetArgumentsErrorPosition(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	fn1 := func() {}
 	assert(getArgumentsErrorPosition(reflect.ValueOf(fn1))).Equals(0)
@@ -407,7 +407,7 @@ func TestGetArgumentsErrorPosition(t *testing.T) {
 }
 
 func TestConvertTypeToString(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	assert(convertTypeToString(nil)).Equals("<nil>")
 	assert(convertTypeToString(bytesType)).Equals("rpc.Bytes")
 	assert(convertTypeToString(arrayType)).Equals("rpc.Array")
@@ -424,7 +424,7 @@ func TestConvertTypeToString(t *testing.T) {
 }
 
 func TestGetFuncKind(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 
 	assert(getFuncKind(nil)).Equals("", false)
 	assert(getFuncKind(3)).Equals("", false)
@@ -471,7 +471,7 @@ func TestGetFuncKind(t *testing.T) {
 }
 
 func TestReadStringFromFile(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	_, file, _, _ := runtime.Caller(0)
 	dir := path.Join(path.Dir(file), "_tmp_")
 
@@ -485,7 +485,7 @@ func TestReadStringFromFile(t *testing.T) {
 }
 
 func TestWriteStringToFile(t *testing.T) {
-	assert := NewAssert(t)
+	assert := newAssert(t)
 	_, file, _, _ := runtime.Caller(0)
 	dir := path.Join(path.Dir(file), "_tmp_")
 
