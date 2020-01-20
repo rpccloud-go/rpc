@@ -8,8 +8,8 @@ import (
 func TestNewRPCError(t *testing.T) {
 	assert := newAssert(t)
 
-	assert(NewRPCError("hello").GetMessage()).Equals("hello")
-	assert(NewRPCError("hello").GetDebug()).Equals("")
+	assert(NewError("hello").GetMessage()).Equals("hello")
+	assert(NewError("hello").GetDebug()).Equals("")
 }
 
 func TestNewRPCErrorByDebug(t *testing.T) {
@@ -17,16 +17,16 @@ func TestNewRPCErrorByDebug(t *testing.T) {
 
 	var testCollection = [][2]interface{}{
 		{
-			NewRPCErrorByDebug("", ""),
+			NewErrorByDebug("", ""),
 			"",
 		}, {
-			NewRPCErrorByDebug("message", ""),
+			NewErrorByDebug("message", ""),
 			"message\n",
 		}, {
-			NewRPCErrorByDebug("", "debug"),
+			NewErrorByDebug("", "debug"),
 			"Debug:\n\tdebug\n",
 		}, {
-			NewRPCErrorByDebug("message", "debug"),
+			NewErrorByDebug("message", "debug"),
 			"message\nDebug:\n\tdebug\n",
 		},
 	}
@@ -39,11 +39,11 @@ func TestNewRPCErrorByError(t *testing.T) {
 	assert := newAssert(t)
 
 	// wrap nil error
-	err := NewRPCErrorByError(nil)
+	err := NewErrorBySystemError(nil)
 	assert(err == nil).IsTrue()
 
 	// wrap error
-	err = NewRPCErrorByError(errors.New("custom error"))
+	err = NewErrorBySystemError(errors.New("custom error"))
 	assert(err.GetMessage()).Equals("custom error")
 	assert(err.GetDebug()).Equals("")
 }

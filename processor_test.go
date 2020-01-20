@@ -16,7 +16,7 @@ func TestNewRPCProcessor(t *testing.T) {
 	logger := NewLogger()
 	callbackFn := func(stream *RPCStream, success bool) {}
 
-	processor := NewRPCProcessor(logger, 16, 32, callbackFn, nil)
+	processor := newRPCProcessor(logger, 16, 32, callbackFn, nil)
 	assert(processor).IsNotNil()
 	assert(processor.isRunning).IsFalse()
 	assert(processor.logger).Equals(logger)
@@ -43,7 +43,7 @@ func TestNewRPCProcessor(t *testing.T) {
 	fnGetRuntimeNumberOfCPU = func() int {
 		return 0
 	}
-	processor1 := NewRPCProcessor(logger, 16, 32, callbackFn, nil)
+	processor1 := newRPCProcessor(logger, 16, 32, callbackFn, nil)
 	assert(len(processor1.threadPools)).Equals(numOfMinThreadPool)
 	processor1.Stop()
 
@@ -51,7 +51,7 @@ func TestNewRPCProcessor(t *testing.T) {
 	fnGetRuntimeNumberOfCPU = func() int {
 		return 999999999
 	}
-	processor2 := NewRPCProcessor(logger, 16, 32, callbackFn, nil)
+	processor2 := newRPCProcessor(logger, 16, 32, callbackFn, nil)
 	assert(len(processor2.threadPools)).Equals(numOfMaxThreadPool)
 	processor2.Stop()
 
@@ -62,7 +62,7 @@ func TestNewRPCProcessor(t *testing.T) {
 func TestRPCProcessor_Start_Stop(t *testing.T) {
 	assert := newAssert(t)
 
-	processor := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor := newRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor.Stop()).IsFalse()
 	assert(processor.isRunning).IsFalse()
 	for i := 0; i < len(processor.threadPools); i++ {
@@ -92,7 +92,7 @@ func TestRPCProcessor_Start_Stop(t *testing.T) {
 
 func TestRPCProcessor_PutStream(t *testing.T) {
 	assert := newAssert(t)
-	processor := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor := newRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor.PutStream(NewRPCStream())).IsFalse()
 	processor.Start()
 	assert(processor.PutStream(NewRPCStream())).IsTrue()
@@ -105,9 +105,9 @@ func TestRPCProcessor_PutStream(t *testing.T) {
 func TestRPCProcessor_AddService(t *testing.T) {
 	assert := newAssert(t)
 
-	processor := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor := newRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor.AddService("test", nil, "DebugMessage")).
-		Equals(NewRPCErrorByDebug(
+		Equals(NewErrorByDebug(
 			"Service is nil",
 			"DebugMessage",
 		))
@@ -120,7 +120,7 @@ func TestRPCProcessor_BuildCache(t *testing.T) {
 	assert := newAssert(t)
 	_, file, _, _ := runtime.Caller(0)
 
-	processor0 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor0 := newRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor0.BuildCache(
 		"pkgName",
 		path.Join(path.Dir(file), "_tmp_/processor-build-cache-0.go"),
@@ -130,7 +130,7 @@ func TestRPCProcessor_BuildCache(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/processor-build-cache-0.go")))
 
-	processor1 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor1 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor1.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, name string) Return {
 			return ctx.OK("hello " + name)
@@ -150,7 +150,7 @@ func TestRPCProcessor_BuildCache(t *testing.T) {
 func TestRPCProcessor_mountNode(t *testing.T) {
 	assert := newAssert(t)
 
-	processor := NewRPCProcessor(nil, 16, 16, nil, nil)
+	processor := newRPCProcessor(nil, 16, 16, nil, nil)
 
 	assert(processor.mountNode(rootName, nil).GetMessage()).
 		Equals("rpc: mountNode: nodeMeta is nil")
@@ -161,7 +161,7 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 		name:        "+",
 		serviceMeta: NewService().(*rpcService),
 		debug:       "DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Service name \"+\" is illegal",
 		"DebugMessage",
 	))
@@ -170,7 +170,7 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 		name:        "abc",
 		serviceMeta: nil,
 		debug:       "DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Service is nil",
 		"DebugMessage",
 	))
@@ -179,7 +179,7 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 		name:        "abc",
 		serviceMeta: NewService().(*rpcService),
 		debug:       "DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"rpc: mountNode: parentNode is nil",
 		"DebugMessage",
 	))
@@ -189,7 +189,7 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 		name:        "abc",
 		serviceMeta: NewService().(*rpcService),
 		debug:       "DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Service path depth $.abc is too long, it must be less or equal than 0",
 		"DebugMessage",
 	))
@@ -204,7 +204,7 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 		name:        "abc",
 		serviceMeta: NewService().(*rpcService),
 		debug:       "DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Service name \"abc\" is duplicated",
 		"Current:\n\tDebugMessage\nConflict:\n\tDebugMessage",
 	))
@@ -245,17 +245,17 @@ func TestRPCProcessor_mountNode(t *testing.T) {
 func TestRPCProcessor_mountEcho(t *testing.T) {
 	assert := newAssert(t)
 
-	processor := NewRPCProcessor(nil, 16, 16, nil, &TestFuncCache{})
+	processor := newRPCProcessor(nil, 16, 16, nil, &TestFuncCache{})
 	rootNode := processor.nodesMap[rootName]
 
 	// check the node is nil
-	assert(processor.mountEcho(nil, nil)).Equals(NewRPCErrorByDebug(
+	assert(processor.mountEcho(nil, nil)).Equals(NewErrorByDebug(
 		"rpc: mountEcho: node is nil",
 		"",
 	))
 
 	// check the echoMeta is nil
-	assert(processor.mountEcho(rootNode, nil)).Equals(NewRPCErrorByDebug(
+	assert(processor.mountEcho(rootNode, nil)).Equals(NewErrorByDebug(
 		"rpc: mountEcho: echoMeta is nil",
 		"",
 	))
@@ -266,7 +266,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		nil,
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo name ### is illegal",
 		"DebugMessage",
 	))
@@ -283,7 +283,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		func(ctx Context) Return { return ctx.OK(true) },
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo name testOccupied is duplicated",
 		"Current:\n\tDebugMessage\nConflict:\n\tDebugMessage",
 	))
@@ -294,7 +294,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		nil,
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo handler is nil",
 		"DebugMessage",
 	))
@@ -305,7 +305,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		make(chan bool),
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo handler must be func(ctx rpc.Context, ...) rpc.Return",
 		"DebugMessage",
 	))
@@ -316,7 +316,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		func(ctx bool) Return { return nilReturn },
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo handler 1st argument type must be rpc.Context",
 		"DebugMessage",
 	))
@@ -326,7 +326,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		func(ctx Context, ch chan bool) Return { return nilReturn },
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo handler 2nd argument type <chan bool> not supported",
 		"DebugMessage",
 	))
@@ -337,7 +337,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		func(ctx Context) (Return, bool) { return nilReturn, true },
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo handler return type must be rpc.Return",
 		"DebugMessage",
 	))
@@ -347,7 +347,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		true,
 		func(ctx Context) bool { return true },
 		"DebugMessage",
-	})).Equals(NewRPCErrorByDebug(
+	})).Equals(NewErrorByDebug(
 		"Echo handler return type must be rpc.Return",
 		"DebugMessage",
 	))
@@ -387,31 +387,31 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 func TestRPCProcessor_OutPutErrors(t *testing.T) {
 	assert := newAssert(t)
 
-	processor := NewRPCProcessor(nil, 16, 16, nil, nil)
+	processor := newRPCProcessor(nil, 16, 16, nil, nil)
 
 	// Service is nil
 	assert(processor.AddService("", nil, "DebugMessage")).
-		Equals(NewRPCErrorByDebug(
+		Equals(NewErrorByDebug(
 			"Service is nil",
 			"DebugMessage",
 		))
 
 	assert(processor.AddService("abc", (*rpcService)(nil), "DebugMessage")).
-		Equals(NewRPCErrorByDebug(
+		Equals(NewErrorByDebug(
 			"Service is nil",
 			"DebugMessage",
 		))
 
 	// Service name %s is illegal
 	assert(processor.AddService("\"\"", NewService(), "DebugMessage")).
-		Equals(NewRPCErrorByDebug(
+		Equals(NewErrorByDebug(
 			"Service name \"\"\"\" is illegal",
 			"DebugMessage",
 		))
 
 	processor.maxNodeDepth = 0
 	assert(processor.AddService("abc", NewService(), "DebugMessage")).
-		Equals(NewRPCErrorByDebug(
+		Equals(NewErrorByDebug(
 			"Service path depth $.abc is too long, it must be less or equal than 0",
 			"DebugMessage",
 		))
@@ -419,14 +419,14 @@ func TestRPCProcessor_OutPutErrors(t *testing.T) {
 
 	_ = processor.AddService("abc", NewService(), "DebugMessage")
 	assert(processor.AddService("abc", NewService(), "DebugMessage")).
-		Equals(NewRPCErrorByDebug(
+		Equals(NewErrorByDebug(
 			"Service name \"abc\" is duplicated",
 			"Current:\n\tDebugMessage\nConflict:\n\tDebugMessage",
 		))
 }
 
 func BenchmarkRpcProcessor_Execute(b *testing.B) {
-	processor := NewRPCProcessor(
+	processor := newRPCProcessor(
 		NewLogger(),
 		16,
 		16,

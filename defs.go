@@ -36,6 +36,14 @@ type fnProcessorCallback = func(
 	success bool,
 )
 
+// Error ...
+type Error interface {
+	GetMessage() string
+	GetDebug() string
+	AddDebug(debug string)
+	Error() string
+}
+
 // Service ...
 type Service interface {
 	Echo(

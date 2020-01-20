@@ -34,7 +34,7 @@ type rpcEchoNode struct {
 	callString  string
 	debugString string
 	argTypes    []reflect.Type
-	indicator   *PerformanceIndicator
+	indicator   *rpcPerformanceIndicator
 }
 
 type rpcServiceNode struct {
@@ -43,8 +43,8 @@ type rpcServiceNode struct {
 	depth   uint
 }
 
-// RPCProcessor ...
-type RPCProcessor struct {
+// rpcProcessor ...
+type rpcProcessor struct {
 	isRunning    bool
 	logger       *Logger
 	fnCache      FuncCache
@@ -54,21 +54,21 @@ type RPCProcessor struct {
 	threadPools  []*rpcThreadPool
 	maxNodeDepth uint64
 	maxCallDepth uint64
-	AutoLock
+	rpcAutoLock
 }
 
 var fnGetRuntimeNumberOfCPU = func() int {
 	return runtime.NumCPU()
 }
 
-// NewRPCProcessor ...
-func NewRPCProcessor(
+// newRPCProcessor ...
+func newRPCProcessor(
 	logger *Logger,
 	maxNodeDepth uint,
 	maxCallDepth uint,
 	callback fnProcessorCallback,
 	fnCache FuncCache,
-) *RPCProcessor {
+) *rpcProcessor {
 	numOfThreadPool := uint32(fnGetRuntimeNumberOfCPU() * numOfThreadPoolPerCore)
 	if numOfThreadPool < numOfMinThreadPool {
 		numOfThreadPool = numOfMinThreadPool
@@ -77,7 +77,7 @@ func NewRPCProcessor(
 		numOfThreadPool = numOfMaxThreadPool
 	}
 
-	ret := &RPCProcessor{
+	ret := &rpcProcessor{
 		isRunning:    false,
 		logger:       logger,
 		fnCache:      fnCache,
@@ -100,7 +100,7 @@ func NewRPCProcessor(
 }
 
 // Start ...
-func (p *RPCProcessor) Start() bool {
+func (p *rpcProcessor) Start() bool {
 	return p.CallWithLock(func() interface{} {
 		if !p.isRunning {
 			p.isRunning = true
@@ -115,7 +115,7 @@ func (p *RPCProcessor) Start() bool {
 }
 
 // Stop ...
-func (p *RPCProcessor) Stop() bool {
+func (p *rpcProcessor) Stop() bool {
 	return p.CallWithLock(func() interface{} {
 		if p.isRunning {
 			for i := 0; i < len(p.threadPools); i++ {
@@ -131,7 +131,7 @@ func (p *RPCProcessor) Stop() bool {
 }
 
 // PutStream ...
-func (p *RPCProcessor) PutStream(stream *RPCStream) bool {
+func (p *rpcProcessor) PutStream(stream *RPCStream) bool {
 	// PutStream stream in a random thread pool
 	threadPool := p.threadPools[int(GetRandUint32())%len(p.threadPools)]
 	if threadPool != nil {
@@ -146,7 +146,7 @@ func (p *RPCProcessor) PutStream(stream *RPCStream) bool {
 }
 
 // BuildCache ...
-func (p *RPCProcessor) BuildCache(pkgName string, path string) error {
+func (p *rpcProcessor) BuildCache(pkgName string, path string) error {
 	retMap := make(map[string]bool)
 	for _, echo := range p.echosMap {
 		if fnTypeString, ok := getFuncKind(echo.echoMeta.handler); ok {
@@ -163,14 +163,14 @@ func (p *RPCProcessor) BuildCache(pkgName string, path string) error {
 }
 
 // AddService ...
-func (p *RPCProcessor) AddService(
+func (p *rpcProcessor) AddService(
 	name string,
 	service Service,
 	debug string,
-) RPCError {
+) Error {
 	serviceMeta, ok := service.(*rpcService)
 	if !ok {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			"Service is nil",
 			debug,
 		)
@@ -183,18 +183,18 @@ func (p *RPCProcessor) AddService(
 	})
 }
 
-func (p *RPCProcessor) mountNode(
+func (p *rpcProcessor) mountNode(
 	parentServiceNodePath string,
 	nodeMeta *rpcNodeMeta,
-) RPCError {
+) Error {
 	// check nodeMeta is not nil
 	if nodeMeta == nil {
-		return NewRPCError("rpc: mountNode: nodeMeta is nil")
+		return NewError("rpc: mountNode: nodeMeta is nil")
 	}
 
 	// check nodeMeta.name is valid
 	if !nodeNameRegex.MatchString(nodeMeta.name) {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf("Service name \"%s\" is illegal", nodeMeta.name),
 			nodeMeta.debug,
 		)
@@ -202,7 +202,7 @@ func (p *RPCProcessor) mountNode(
 
 	// check nodeMeta.serviceMeta is not nil
 	if nodeMeta.serviceMeta == nil {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			"Service is nil",
 			nodeMeta.debug,
 		)
@@ -211,14 +211,14 @@ func (p *RPCProcessor) mountNode(
 	// check max node depth overflow
 	parentNode, ok := p.nodesMap[parentServiceNodePath]
 	if !ok {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			"rpc: mountNode: parentNode is nil",
 			nodeMeta.debug,
 		)
 	}
 	servicePath := parentServiceNodePath + "." + nodeMeta.name
 	if uint64(parentNode.depth+1) > p.maxNodeDepth {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Service path depth %s is too long, it must be less or equal than %d",
 				servicePath,
@@ -230,7 +230,7 @@ func (p *RPCProcessor) mountNode(
 
 	// check the mount path is not occupied
 	if item, ok := p.nodesMap[servicePath]; ok {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Service name \"%s\" is duplicated",
 				nodeMeta.name,
@@ -273,23 +273,23 @@ func (p *RPCProcessor) mountNode(
 	return nil
 }
 
-func (p *RPCProcessor) mountEcho(
+func (p *rpcProcessor) mountEcho(
 	serviceNode *rpcServiceNode,
 	echoMeta *rpcEchoMeta,
-) RPCError {
+) Error {
 	// check the node is nil
 	if serviceNode == nil {
-		return NewRPCError("rpc: mountEcho: node is nil")
+		return NewError("rpc: mountEcho: node is nil")
 	}
 
 	// check the echoMeta is nil
 	if echoMeta == nil {
-		return NewRPCError("rpc: mountEcho: echoMeta is nil")
+		return NewError("rpc: mountEcho: echoMeta is nil")
 	}
 
 	// check the name
 	if !echoNameRegex.MatchString(echoMeta.name) {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf("Echo name %s is illegal", echoMeta.name),
 			echoMeta.debug,
 		)
@@ -298,7 +298,7 @@ func (p *RPCProcessor) mountEcho(
 	// check the echo path is not occupied
 	echoPath := serviceNode.path + ":" + echoMeta.name
 	if item, ok := p.echosMap[echoPath]; ok {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Echo name %s is duplicated",
 				echoMeta.name,
@@ -313,7 +313,7 @@ func (p *RPCProcessor) mountEcho(
 
 	// check the echo handler is nil
 	if echoMeta.handler == nil {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			"Echo handler is nil",
 			echoMeta.debug,
 		)
@@ -322,7 +322,7 @@ func (p *RPCProcessor) mountEcho(
 	// Check echo handler is Func
 	fn := reflect.ValueOf(echoMeta.handler)
 	if fn.Kind() != reflect.Func {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Echo handler must be func(ctx %s, ...) %s",
 				convertTypeToString(contextType),
@@ -335,7 +335,7 @@ func (p *RPCProcessor) mountEcho(
 	// Check echo handler arguments types
 	argumentsErrorPos := getArgumentsErrorPosition(fn)
 	if argumentsErrorPos == 0 {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Echo handler 1st argument type must be %s",
 				convertTypeToString(contextType),
@@ -343,7 +343,7 @@ func (p *RPCProcessor) mountEcho(
 			echoMeta.debug,
 		)
 	} else if argumentsErrorPos > 0 {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Echo handler %s argument type <%s> not supported",
 				ConvertOrdinalToString(1+uint(argumentsErrorPos)),
@@ -356,7 +356,7 @@ func (p *RPCProcessor) mountEcho(
 	// Check return type
 	if fn.Type().NumOut() != 1 ||
 		fn.Type().Out(0) != reflect.ValueOf(nilReturn).Type() {
-		return NewRPCErrorByDebug(
+		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Echo handler return type must be %s",
 				convertTypeToString(returnType),

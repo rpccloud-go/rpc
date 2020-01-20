@@ -292,9 +292,9 @@ func (p *WebSocketClient) getCallbackByID(key uint32) *websocketClientCallback {
 func (p *WebSocketClient) SendMessage(
 	target string,
 	args ...interface{},
-) (interface{}, RPCError) {
+) (interface{}, Error) {
 	if !p.isRunning() {
-		return nil, NewRPCError("client closed")
+		return nil, NewError("client closed")
 	}
 
 	callback := p.registerCallback()
@@ -312,7 +312,7 @@ func (p *WebSocketClient) SendMessage(
 
 	for i := 0; i < len(args); i++ {
 		if stream.Write(args[i]) != RPCStreamWriteOK {
-			return nil, NewRPCError("args not supported")
+			return nil, NewError("args not supported")
 		}
 	}
 
@@ -320,34 +320,34 @@ func (p *WebSocketClient) SendMessage(
 	p.sendChannel <- callback
 
 	if response := <-callback.ch; !response {
-		return nil, NewRPCError("timeout")
+		return nil, NewError("timeout")
 	}
 
 	success, ok := stream.ReadBool()
 	if !ok {
-		return nil, NewRPCError("data format error")
+		return nil, NewError("data format error")
 	}
 
 	if !success {
 		message, ok := stream.ReadString()
 		if !ok {
-			return nil, NewRPCError("data format error")
+			return nil, NewError("data format error")
 		}
 		debug, ok := stream.ReadString()
 		if !ok {
-			return nil, NewRPCError("data format error")
+			return nil, NewError("data format error")
 		}
-		return nil, NewRPCErrorByDebug(message, debug)
+		return nil, NewErrorByDebug(message, debug)
 	}
 
 	if ret, ok := stream.Read(); ok {
 		return ret, nil
 	}
-	return nil, NewRPCError("data format error")
+	return nil, NewError("data format error")
 }
 
 // Close close the WebSocketClient
-func (p *WebSocketClient) Close() (ret RPCError) {
+func (p *WebSocketClient) Close() (ret Error) {
 	if atomic.CompareAndSwapInt32(&p.status, wsClientRunning, wsClientClosed) {
 		close(p.sendChannel)
 		if conn := p.getConn(); conn != nil {
@@ -356,14 +356,14 @@ func (p *WebSocketClient) Close() (ret RPCError) {
 				websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""),
 			); err != nil {
 				p.onError(err.Error())
-				ret = NewRPCErrorByError(err)
+				ret = NewErrorBySystemError(err)
 			}
 		}
 		<-p.doConnectCH
 		<-p.doSendCH
 		<-p.doTimeoutCH
 	} else {
-		ret = NewRPCError("WebSocketClient: client is not running")
+		ret = NewError("WebSocketClient: client is not running")
 	}
 	return
 }

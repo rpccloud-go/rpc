@@ -24,7 +24,7 @@ func (p *rpcContext) writeError(message string, debug string) *rpcReturn {
 			thread.threadPool.processor != nil &&
 			thread.threadPool.processor.logger != nil {
 			thread.threadPool.processor.logger.Error(
-				NewRPCErrorByDebug(message, debug).Error(),
+				NewErrorByDebug(message, debug).Error(),
 			)
 		}
 		execStream := thread.outStream
@@ -53,7 +53,7 @@ func (p *rpcContext) OK(value interface{}) *rpcReturn {
 	return nilReturn
 }
 
-func (p *rpcContext) Error(err RPCError) *rpcReturn {
+func (p *rpcContext) Error(err Error) *rpcReturn {
 	if err == nil {
 		return nilReturn
 	}
@@ -69,7 +69,7 @@ func (p *rpcContext) Error(err RPCError) *rpcReturn {
 
 func (p *rpcContext) Errorf(format string, a ...interface{}) *rpcReturn {
 	return p.Error(
-		NewRPCErrorByDebug(
+		NewErrorByDebug(
 			fmt.Sprintf(format, a...),
 			GetStackString(1),
 		))

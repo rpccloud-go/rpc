@@ -63,7 +63,7 @@ func (p *wsServerConn) setSequence(from uint32, to uint32) bool {
 
 // WebSocketServer is implement of INetServer via web socket
 type WebSocketServer struct {
-	processor     *RPCProcessor
+	processor     *rpcProcessor
 	logger        *Logger
 	status        int32
 	readSizeLimit uint64
@@ -86,7 +86,7 @@ func NewWebSocketServer(fnCache FuncCache) *WebSocketServer {
 		seed:          1,
 	}
 
-	server.processor = NewRPCProcessor(
+	server.processor = newRPCProcessor(
 		server.logger,
 		32,
 		32,
@@ -265,7 +265,7 @@ func (p *WebSocketServer) Start(
 	host string,
 	port uint16,
 	path string,
-) (ret RPCError) {
+) (ret Error) {
 	if atomic.CompareAndSwapInt32(&p.status, wsServerClosed, wsServerOpening) {
 		p.logger.Infof(
 			"WebSocketServer: start at %s",
@@ -409,16 +409,16 @@ func (p *WebSocketServer) Start(
 			return nil
 		}
 
-		return NewRPCErrorByError(ret)
+		return NewErrorBySystemError(ret)
 	}
 
-	return NewRPCError("WebSocketServer: has already been started")
+	return NewError("WebSocketServer: has already been started")
 }
 
 // Close make the WebSocketServer stop serve
-func (p *WebSocketServer) Close() RPCError {
+func (p *WebSocketServer) Close() Error {
 	if atomic.CompareAndSwapInt32(&p.status, wsServerOpened, wsServerClosing) {
-		err := NewRPCErrorByError(p.httpServer.Close())
+		err := NewErrorBySystemError(p.httpServer.Close())
 		for !atomic.CompareAndSwapInt32(
 			&p.status,
 			wsServerDidClosing,
@@ -428,7 +428,7 @@ func (p *WebSocketServer) Close() RPCError {
 		}
 		return err
 	}
-	return NewRPCError(
+	return NewError(
 		"WebSocketServer: close error, it is not opened",
 	)
 }

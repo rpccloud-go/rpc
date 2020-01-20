@@ -20,7 +20,7 @@ type rpcThread struct {
 	execSuccessful bool
 	from           string
 	closeCH        chan bool
-	AutoLock
+	rpcAutoLock
 }
 
 func newThread(threadPool *rpcThreadPool) *rpcThread {

@@ -28,7 +28,7 @@ func TestFnCache_basic(t *testing.T) {
 	assert := newAssert(t)
 	_, file, _, _ := runtime.Caller(0)
 
-	processor0 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor0 := newRPCProcessor(nil, 16, 32, nil, nil)
 	assert(processor0.BuildCache(
 		"pkgName",
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-0.go"),
@@ -38,7 +38,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-0.go")))
 
-	processor1 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor1 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor1.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context) Return {
 			return ctx.OK(true)
@@ -52,7 +52,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-1.go")))
 
-	processor2 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor2 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor2.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ Bool) Return {
 			return ctx.OK(true)
@@ -66,7 +66,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-2.go")))
 
-	processor3 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor3 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor3.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ Int64) Return {
 			return ctx.OK(true)
@@ -80,7 +80,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-3.go")))
 
-	processor4 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor4 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor4.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ Uint64) Return {
 			return ctx.OK(true)
@@ -94,7 +94,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-4.go")))
 
-	processor5 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor5 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor5.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ Float64) Return {
 			return ctx.OK(true)
@@ -108,7 +108,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-5.go")))
 
-	processor6 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor6 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor6.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ String) Return {
 			return ctx.OK(true)
@@ -122,7 +122,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-6.go")))
 
-	processor7 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor7 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor7.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ Bytes) Return {
 			return ctx.OK(true)
@@ -136,7 +136,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-7.go")))
 
-	processor8 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor8 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor8.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ Array) Return {
 			return ctx.OK(true)
@@ -150,7 +150,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-8.go")))
 
-	processor9 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor9 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor9.AddService("abc", NewService().
 		Echo("sayHello", true, func(ctx Context, _ Map) Return {
 			return ctx.OK(true)
@@ -164,7 +164,7 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-9.go")))
 
-	processor10 := NewRPCProcessor(nil, 16, 32, nil, nil)
+	processor10 := newRPCProcessor(nil, 16, 32, nil, nil)
 	_ = processor10.AddService("abc", NewService().
 		Echo("sayHello", true, func(
 			ctx Context, _ Bool, _ Int64, _ Uint64, _ Float64, _ String,

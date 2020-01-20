@@ -4,9 +4,9 @@ import (
 	"fmt"
 )
 
-type fnCache struct{}
+type rpcFuncCacheGenerator struct{}
 
-func (p *fnCache) getParamName(idx int) string {
+func (p *rpcFuncCacheGenerator) getParamName(idx int) string {
 	if idx < 6 {
 		return []string{
 			"a", "b", "c", "d", "e", "f",
@@ -15,7 +15,7 @@ func (p *fnCache) getParamName(idx int) string {
 	return fmt.Sprintf("pa%d", idx)
 }
 
-func (p *fnCache) getOKName(idx int) string {
+func (p *rpcFuncCacheGenerator) getOKName(idx int) string {
 	if idx < 6 {
 		return []string{
 			"g", "h", "i", "j", "k", "l",
@@ -24,7 +24,7 @@ func (p *fnCache) getOKName(idx int) string {
 	return fmt.Sprintf("ok%d", idx)
 }
 
-func (p *fnCache) writeHeader(
+func (p *rpcFuncCacheGenerator) writeHeader(
 	pkgName string,
 	sb *StringBuilder,
 	kinds []string,
@@ -90,7 +90,7 @@ func (p *fnCache) writeHeader(
 	}
 }
 
-func (p *fnCache) writeGetFunc(sb *StringBuilder, kinds []string) {
+func (p *rpcFuncCacheGenerator) writeGetFunc(sb *StringBuilder, kinds []string) {
 	sb.AppendString("\nfunc getFCache(fnString string) rpc.FuncCacheType {\n")
 	sb.AppendString("\tswitch fnString {\n")
 
@@ -105,13 +105,13 @@ func (p *fnCache) writeGetFunc(sb *StringBuilder, kinds []string) {
 	sb.AppendString("}\n")
 }
 
-func (p *fnCache) writeFunctions(sb *StringBuilder, kinds []string) {
+func (p *rpcFuncCacheGenerator) writeFunctions(sb *StringBuilder, kinds []string) {
 	for _, kind := range kinds {
 		p.writeFunc(sb, kind)
 	}
 }
 
-func (p *fnCache) writeFunc(sb *StringBuilder, kind string) {
+func (p *rpcFuncCacheGenerator) writeFunc(sb *StringBuilder, kind string) {
 	sb.AppendFormat("\nfunc fc%s(m o, q q, z z) n {\n", kind)
 
 	sbBody := NewStringBuilder()
@@ -172,7 +172,7 @@ func (p *fnCache) writeFunc(sb *StringBuilder, kind string) {
 
 func buildFuncCache(pkgName string, path string, kinds []string) error {
 	sb := NewStringBuilder()
-	cache := &fnCache{}
+	cache := &rpcFuncCacheGenerator{}
 	cache.writeHeader(pkgName, sb, kinds)
 	cache.writeGetFunc(sb, kinds)
 	cache.writeFunctions(sb, kinds)

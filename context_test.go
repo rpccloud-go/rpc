@@ -77,7 +77,7 @@ func TestRpcContext_writeError(t *testing.T) {
 	assert := newAssert(t)
 
 	// ctx is ok
-	processor := NewRPCProcessor(NewLogger(), 16, 16, nil, nil)
+	processor := newRPCProcessor(NewLogger(), 16, 16, nil, nil)
 	thread := newThread(newThreadPool(processor))
 	thread.stop()
 	thread.execSuccessful = true
@@ -115,7 +115,7 @@ func TestRpcContext_Error(t *testing.T) {
 	assert(thread.outStream.GetReadPos()).Equals(17)
 
 	assert(
-		ctx.Error(NewRPCErrorByDebug("errorMessage", "errorDebug")),
+		ctx.Error(NewErrorByDebug("errorMessage", "errorDebug")),
 	).IsNil()
 	thread.outStream.SetReadPos(17)
 	assert(thread.outStream.ReadBool()).Equals(false, true)
@@ -128,7 +128,7 @@ func TestRpcContext_Error(t *testing.T) {
 	thread1.execEchoNode = &rpcEchoNode{debugString: "nodeDebug"}
 	ctx1 := rpcContext{thread: unsafe.Pointer(thread1)}
 	assert(
-		ctx1.Error(NewRPCErrorByDebug("errorMessage", "errorDebug")),
+		ctx1.Error(NewErrorByDebug("errorMessage", "errorDebug")),
 	).IsNil()
 	thread1.outStream.SetReadPos(17)
 	assert(thread1.outStream.ReadBool()).Equals(false, true)

@@ -8,7 +8,7 @@ import (
 func TestNewThreadPool(t *testing.T) {
 	assert := newAssert(t)
 
-	pool := newThreadPool(NewRPCProcessor(nil, 16, 16, nil, nil))
+	pool := newThreadPool(newRPCProcessor(nil, 16, 16, nil, nil))
 	assert(pool).IsNotNil()
 	assert(pool.isRunning).IsTrue()
 	assert(len(pool.threads)).Equals(numOfThreadPerThreadPool)
@@ -26,7 +26,7 @@ func TestNewThreadPool(t *testing.T) {
 
 func TestRpcThreadPool_stop(t *testing.T) {
 	assert := newAssert(t)
-	pool := newThreadPool(NewRPCProcessor(nil, 16, 16, nil, nil))
+	pool := newThreadPool(newRPCProcessor(nil, 16, 16, nil, nil))
 	assert(pool.stop()).IsTrue()
 	for i := 0; i < numOfThreadPerThreadPool; i++ {
 		assert(pool.threads[i]).IsNil()
@@ -36,7 +36,7 @@ func TestRpcThreadPool_stop(t *testing.T) {
 
 	timeoutMessageCH := make(chan string, 10)
 	logger := NewLogger()
-	processor := NewRPCProcessor(logger, 16, 16, nil, nil)
+	processor := newRPCProcessor(logger, 16, 16, nil, nil)
 	_ = processor.AddService(
 		"user",
 		NewService().Echo("sayHello", true, func(ctx Context) Return {
@@ -63,7 +63,7 @@ func TestRpcThreadPool_stop(t *testing.T) {
 
 func TestRpcThreadPool_allocThread(t *testing.T) {
 	assert := newAssert(t)
-	pool := newThreadPool(NewRPCProcessor(nil, 16, 16, nil, nil))
+	pool := newThreadPool(newRPCProcessor(nil, 16, 16, nil, nil))
 	assert(len(pool.freeThreads)).Equals(numOfThreadPerThreadPool)
 	thread := pool.allocThread()
 	assert(thread).IsNotNil()
@@ -74,7 +74,7 @@ func TestRpcThreadPool_allocThread(t *testing.T) {
 
 func TestRpcThreadPool_freeThread(t *testing.T) {
 	assert := newAssert(t)
-	pool := newThreadPool(NewRPCProcessor(nil, 16, 16, nil, nil))
+	pool := newThreadPool(newRPCProcessor(nil, 16, 16, nil, nil))
 	thread := pool.allocThread()
 	assert(thread).IsNotNil()
 	assert(len(pool.freeThreads)).Equals(numOfThreadPerThreadPool - 1)

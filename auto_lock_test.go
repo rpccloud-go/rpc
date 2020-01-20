@@ -4,7 +4,7 @@ import "testing"
 
 func TestAutoLock_CallWithLock(t *testing.T) {
 	assert := newAssert(t)
-	locker := AutoLock{}
+	locker := rpcAutoLock{}
 	waits := make(chan bool)
 	sum := 0
 
@@ -29,7 +29,7 @@ func TestAutoLock_CallWithLock(t *testing.T) {
 
 func TestAutoLock_DoWithLock(t *testing.T) {
 	assert := newAssert(t)
-	locker := AutoLock{}
+	locker := rpcAutoLock{}
 	waits := make(chan bool)
 	sum := 0
 

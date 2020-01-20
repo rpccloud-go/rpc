@@ -1,32 +1,24 @@
 package rpc
 
-// RPCError ...
-type RPCError interface {
-	GetMessage() string
-	GetDebug() string
-	AddDebug(debug string)
-	Error() string
-}
-
-// NewRPCError create new error
-func NewRPCError(message string) RPCError {
+// NewError create new error
+func NewError(message string) Error {
 	return &rpcError{
 		message: message,
 		debug:   "",
 	}
 }
 
-// NewRPCErrorByDebug create new error
-func NewRPCErrorByDebug(message string, debug string) RPCError {
+// NewErrorByDebug create new error
+func NewErrorByDebug(message string, debug string) Error {
 	return &rpcError{
 		message: message,
 		debug:   debug,
 	}
 }
 
-// NewRPCErrorByError add debug segment to the error,
+// NewErrorBySystemError add debug segment to the error,
 // Note: if err is not Error type, we wrapped it
-func NewRPCErrorByError(err error) RPCError {
+func NewErrorBySystemError(err error) Error {
 	if err == nil {
 		return nil
 	}
@@ -37,7 +29,6 @@ func NewRPCErrorByError(err error) RPCError {
 	}
 }
 
-// NewRPCError ...
 type rpcError struct {
 	message string
 	debug   string

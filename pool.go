@@ -7,13 +7,13 @@ import (
 // rpcThreadPool
 type rpcThreadPool struct {
 	isRunning   bool
-	processor   *RPCProcessor
+	processor   *rpcProcessor
 	threads     []*rpcThread
 	freeThreads chan *rpcThread
-	AutoLock
+	rpcAutoLock
 }
 
-func newThreadPool(processor *RPCProcessor) *rpcThreadPool {
+func newThreadPool(processor *rpcProcessor) *rpcThreadPool {
 	ret := &rpcThreadPool{
 		isRunning: true,
 		processor: processor,

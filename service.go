@@ -17,7 +17,7 @@ type rpcService struct {
 	children []*rpcNodeMeta // all the children node meta pointer
 	echos    []*rpcEchoMeta // all the echos meta pointer
 	debug    string         // where the service define in source file
-	AutoLock
+	rpcAutoLock
 }
 
 // NewService define a new service
