@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"os"
 	"path"
 	"runtime"
 	"testing"
@@ -181,5 +182,5 @@ func TestFnCache_basic(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/fncache-basic-10.go")))
 
-	//_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
+	_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
 }

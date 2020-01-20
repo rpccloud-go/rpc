@@ -144,7 +144,7 @@ func TestRPCProcessor_BuildCache(t *testing.T) {
 	)).Equals(readStringFromFile(
 		path.Join(path.Dir(file), "_tmp_/processor-build-cache-1.go")))
 
-	//	_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
+	_ = os.RemoveAll(path.Join(path.Dir(file), "_tmp_"))
 }
 
 func TestRPCProcessor_mountNode(t *testing.T) {
