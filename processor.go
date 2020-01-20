@@ -10,7 +10,7 @@ import (
 
 const (
 	rootName                 = "$"
-	numOfThreadPerThreadPool = 8
+	numOfThreadPerThreadPool = 2
 	numOfThreadPoolPerCore   = 2
 	numOfMinThreadPool       = 2
 	numOfMaxThreadPool       = 2
