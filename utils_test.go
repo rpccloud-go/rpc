@@ -22,8 +22,8 @@ func TestTimeNowNS(t *testing.T) {
 
 	for i := 0; i < 500; i++ {
 		nowNS := TimeNowNS()
-		assert(time.Now().UnixNano()-nowNS < int64(10*time.Millisecond)).IsTrue()
-		assert(time.Now().UnixNano()-nowNS > int64(-10*time.Millisecond)).IsTrue()
+		assert(time.Now().UnixNano()-nowNS < int64(20*time.Millisecond)).IsTrue()
+		assert(time.Now().UnixNano()-nowNS > int64(-20*time.Millisecond)).IsTrue()
 		time.Sleep(time.Millisecond)
 	}
 
@@ -31,8 +31,8 @@ func TestTimeNowNS(t *testing.T) {
 	atomic.StorePointer(&timeNowPointer, nil)
 	for i := 0; i < 500; i++ {
 		nowNS := TimeNowNS()
-		assert(time.Now().UnixNano()-nowNS < int64(10*time.Millisecond)).IsTrue()
-		assert(time.Now().UnixNano()-nowNS > int64(-10*time.Millisecond)).IsTrue()
+		assert(time.Now().UnixNano()-nowNS < int64(20*time.Millisecond)).IsTrue()
+		assert(time.Now().UnixNano()-nowNS > int64(-20*time.Millisecond)).IsTrue()
 		time.Sleep(time.Millisecond)
 	}
 }
@@ -40,8 +40,8 @@ func TestTimeNowNS(t *testing.T) {
 func TestTimeNowMS(t *testing.T) {
 	assert := newAssert(t)
 	nowNS := TimeNowMS() * int64(time.Millisecond)
-	assert(time.Now().UnixNano()-nowNS < int64(10*time.Millisecond)).IsTrue()
-	assert(time.Now().UnixNano()-nowNS > int64(-10*time.Millisecond)).IsTrue()
+	assert(time.Now().UnixNano()-nowNS < int64(20*time.Millisecond)).IsTrue()
+	assert(time.Now().UnixNano()-nowNS > int64(-20*time.Millisecond)).IsTrue()
 }
 
 func TestTimeNowISOString(t *testing.T) {
@@ -53,10 +53,10 @@ func TestTimeNowISOString(t *testing.T) {
 			TimeNowISOString(),
 		); err == nil {
 			assert(
-				time.Now().UnixNano()-nowNS.UnixNano() < int64(10*time.Millisecond),
+				time.Now().UnixNano()-nowNS.UnixNano() < int64(20*time.Millisecond),
 			).IsTrue()
 			assert(
-				time.Now().UnixNano()-nowNS.UnixNano() > int64(-10*time.Millisecond),
+				time.Now().UnixNano()-nowNS.UnixNano() > int64(-20*time.Millisecond),
 			).IsTrue()
 		} else {
 			assert().Fail()
@@ -72,10 +72,10 @@ func TestTimeNowISOString(t *testing.T) {
 			TimeNowISOString(),
 		); err == nil {
 			assert(
-				time.Now().UnixNano()-nowNS.UnixNano() < int64(10*time.Millisecond),
+				time.Now().UnixNano()-nowNS.UnixNano() < int64(20*time.Millisecond),
 			).IsTrue()
 			assert(
-				time.Now().UnixNano()-nowNS.UnixNano() > int64(-10*time.Millisecond),
+				time.Now().UnixNano()-nowNS.UnixNano() > int64(-20*time.Millisecond),
 			).IsTrue()
 		} else {
 			assert().Fail()
