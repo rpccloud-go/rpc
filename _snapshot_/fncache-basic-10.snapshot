@@ -1,0 +1,57 @@
+package pkgName
+
+import "github.com/tslearn/kzserver/common"
+
+type rpcCache struct{}
+
+// NewRPCCache ...
+func NewRPCCache() common.RPCCache {
+	return &rpcCache{}
+}
+
+// Get ...
+func (p *rpcCache) Get(fnString string) common.RPCCacheFunc {
+	return getFCache(fnString)
+}
+
+type n = bool
+type o = common.RPCContext
+type p = common.RPCReturn
+type q = *common.RPCStream
+type r = common.RPCBool
+type s = common.RPCInt
+type t = common.RPCUint
+type u = common.RPCFloat
+type v = common.RPCString
+type w = common.RPCBytes
+type x = common.RPCArray
+type y = common.RPCMap
+type z = interface{}
+
+const af = false
+const at = true
+
+func getFCache(fnString string) common.RPCCacheFunc {
+	switch fnString {
+	case "BIUFSXAM":
+		return fcBIUFSXAM
+	}
+
+	return nil
+}
+
+func fcBIUFSXAM(m o, q q, z z) n {
+	a, g := q.ReadBool()
+	b, h := q.ReadInt64()
+	c, i := q.ReadUint64()
+	d, j := q.ReadFloat64()
+	e, k := q.ReadString()
+	f, l := q.ReadBytes()
+	pa6, ok6 := q.ReadArray()
+	pa7, ok7 := q.ReadMap()
+	if !g || !h || !i || !j || !k || !l || !ok6 || !ok7 || q.CanRead() {
+		return af
+	}
+	z.(func(o, r, s, t, u, v, w, x, y) p)(m, a, b, c, d, e, f, pa6, pa7)
+	return at
+}

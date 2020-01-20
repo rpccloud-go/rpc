@@ -1,0 +1,43 @@
+package pkgName
+
+import "github.com/tslearn/kzserver/common"
+
+type rpcCache struct{}
+
+// NewRPCCache ...
+func NewRPCCache() common.RPCCache {
+	return &rpcCache{}
+}
+
+// Get ...
+func (p *rpcCache) Get(fnString string) common.RPCCacheFunc {
+	return getFCache(fnString)
+}
+
+type n = bool
+type o = common.RPCContext
+type p = common.RPCReturn
+type q = *common.RPCStream
+type x = common.RPCArray
+type z = interface{}
+
+const af = false
+const at = true
+
+func getFCache(fnString string) common.RPCCacheFunc {
+	switch fnString {
+	case "A":
+		return fcA
+	}
+
+	return nil
+}
+
+func fcA(m o, q q, z z) n {
+	a, g := q.ReadArray()
+	if !g || q.CanRead() {
+		return af
+	}
+	z.(func(o, x) p)(m, a)
+	return at
+}
