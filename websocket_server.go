@@ -153,7 +153,7 @@ func (p *WebSocketServer) registerConn(
 			ret = &wsServerConn{
 				id:         id,
 				sequence:   1,
-				security:   GetRandString(32),
+				security:   getRandString(32),
 				wsConn:     unsafe.Pointer(wsConn),
 				connIndex:  0,
 				deadlineNS: 0,

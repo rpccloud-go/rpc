@@ -19,14 +19,14 @@ var (
 	randCacheUint32 = make([]uint32, randCacheSize, randCacheSize)
 )
 
-// GetRandUint32 get Uint32 rand and fast,
+// getRandUint32 get Uint32 rand and fast,
 // this is approximate rand but high performance
-func GetRandUint32() uint32 {
+func getRandUint32() uint32 {
 	return randCacheUint32[atomic.AddUint64(&randPos, 1)%randCacheSize]
 }
 
-// GetRandString get random string
-func GetRandString(strLen int) string {
+// getRandString get random string
+func getRandString(strLen int) string {
 	sb := NewStringBuilder()
 	for strLen > 0 {
 		rand64 := rand.Uint64()
