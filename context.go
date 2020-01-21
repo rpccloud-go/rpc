@@ -44,7 +44,7 @@ func (p *rpcContext) OK(value interface{}) *rpcReturn {
 		stream.SetWritePos(17)
 		stream.WriteBool(true)
 
-		if stream.Write(value) != RPCStreamWriteOK {
+		if stream.Write(value) != rpcStreamWriteOK {
 			return p.writeError("return type is error", GetStackString(1))
 		}
 

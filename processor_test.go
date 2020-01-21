@@ -93,13 +93,13 @@ func TestRPCProcessor_Start_Stop(t *testing.T) {
 func TestRPCProcessor_PutStream(t *testing.T) {
 	assert := newAssert(t)
 	processor := newRPCProcessor(nil, 16, 32, nil, nil)
-	assert(processor.PutStream(NewRPCStream())).IsFalse()
+	assert(processor.PutStream(newStream())).IsFalse()
 	processor.Start()
-	assert(processor.PutStream(NewRPCStream())).IsTrue()
+	assert(processor.PutStream(newStream())).IsTrue()
 	for i := 0; i < len(processor.threadPools); i++ {
 		processor.threadPools[i].stop()
 	}
-	assert(processor.PutStream(NewRPCStream())).IsFalse()
+	assert(processor.PutStream(newStream())).IsFalse()
 }
 
 func TestRPCProcessor_AddService(t *testing.T) {
@@ -458,7 +458,7 @@ func BenchmarkRpcProcessor_Execute(b *testing.B) {
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			stream := NewRPCStream()
+			stream := newStream()
 			stream.WriteString("$.user:sayHello")
 			stream.WriteUint64(3)
 			stream.WriteString("#")

@@ -46,7 +46,7 @@ func TestRpcThreadPool_stop(t *testing.T) {
 		GetStackString(0),
 	)
 
-	stream := NewRPCStream()
+	stream := newStream()
 	stream.WriteString("$.user:sayHello")
 	stream.WriteUint64(3)
 	stream.WriteString("#")

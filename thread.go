@@ -29,7 +29,7 @@ func newThread(threadPool *rpcThreadPool) *rpcThread {
 		isRunning:      true,
 		ch:             make(chan *RPCStream),
 		inStream:       nil,
-		outStream:      NewRPCStream(),
+		outStream:      newStream(),
 		execDepth:      0,
 		execEchoNode:   nil,
 		execArgs:       make([]reflect.Value, 0, 16),

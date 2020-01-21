@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	// RPCStreamWriteOK ...
-	RPCStreamWriteOK int = iota
-	// RPCStreamWriteUnsupportedType ...
-	RPCStreamWriteUnsupportedType
+	// rpcStreamWriteOK ...
+	rpcStreamWriteOK int = iota
+	// rpcStreamWriteUnsupportedType ...
+	rpcStreamWriteUnsupportedType
 )
 
 var (
@@ -116,8 +116,8 @@ type RPCStream struct {
 	header []byte
 }
 
-// NewRPCStream ...
-func NewRPCStream() *RPCStream {
+// newStream ...
+func newStream() *RPCStream {
 	return rpcStreamCache.Get().(*RPCStream)
 }
 
@@ -990,7 +990,7 @@ func (p *RPCStream) WriteBytes(v Bytes) {
 func (p *RPCStream) WriteArray(v Array) int {
 	if v == nil {
 		p.WriteNil()
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	}
 
 	length := len(v)
@@ -1000,7 +1000,7 @@ func (p *RPCStream) WriteArray(v Array) int {
 		if p.writeIndex == 512 {
 			p.gotoNextWriteFrame()
 		}
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	}
 
 	startPos := p.GetWritePos()
@@ -1039,7 +1039,7 @@ func (p *RPCStream) WriteArray(v Array) int {
 
 	for i := 0; i < length; i++ {
 		errCode := p.Write(v[i])
-		if errCode != RPCStreamWriteOK {
+		if errCode != rpcStreamWriteOK {
 			p.setWritePosUnsafe(startPos)
 			return errCode
 		}
@@ -1063,14 +1063,14 @@ func (p *RPCStream) WriteArray(v Array) int {
 		p.setWritePosUnsafe(endPos)
 	}
 
-	return RPCStreamWriteOK
+	return rpcStreamWriteOK
 }
 
 // WriteMap write Map value to stream
 func (p *RPCStream) WriteMap(v Map) int {
 	if v == nil {
 		p.WriteNil()
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	}
 
 	length := len(v)
@@ -1081,7 +1081,7 @@ func (p *RPCStream) WriteMap(v Map) int {
 		if p.writeIndex == 512 {
 			p.gotoNextWriteFrame()
 		}
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	}
 
 	startPos := p.GetWritePos()
@@ -1121,7 +1121,7 @@ func (p *RPCStream) WriteMap(v Map) int {
 	for name, value := range v {
 		p.WriteString(name)
 		errCode := p.Write(value)
-		if errCode != RPCStreamWriteOK {
+		if errCode != rpcStreamWriteOK {
 			p.setWritePosUnsafe(startPos)
 			return errCode
 		}
@@ -1145,7 +1145,7 @@ func (p *RPCStream) WriteMap(v Map) int {
 		p.setWritePosUnsafe(endPos)
 	}
 
-	return RPCStreamWriteOK
+	return rpcStreamWriteOK
 }
 
 // Write write generic value to stream
@@ -1153,59 +1153,59 @@ func (p *RPCStream) Write(v interface{}) int {
 	switch v.(type) {
 	case nil:
 		p.WriteNil()
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case bool:
 		p.WriteBool(v.(bool))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case int:
 		p.WriteInt64(int64(v.(int)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case int8:
 		p.WriteInt64(int64(v.(int8)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case int16:
 		p.WriteInt64(int64(v.(int16)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case int32:
 		p.WriteInt64(int64(v.(int32)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case int64:
 		p.WriteInt64(v.(int64))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case uint:
 		p.WriteUint64(uint64(v.(uint)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case uint8:
 		p.WriteUint64(uint64(v.(uint8)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case uint16:
 		p.WriteUint64(uint64(v.(uint16)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case uint32:
 		p.WriteUint64(uint64(v.(uint32)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case uint64:
 		p.WriteUint64(v.(uint64))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case float32:
 		p.WriteFloat64(float64(v.(float32)))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case float64:
 		p.WriteFloat64(v.(float64))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case string:
 		p.WriteString(v.(string))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case Bytes:
 		p.WriteBytes(v.(Bytes))
-		return RPCStreamWriteOK
+		return rpcStreamWriteOK
 	case Array:
 		return p.WriteArray(v.(Array))
 	case Map:
 		return p.WriteMap(v.(Map))
 	}
 
-	return RPCStreamWriteUnsupportedType
+	return rpcStreamWriteUnsupportedType
 }
 
 // ReadNil read a nil

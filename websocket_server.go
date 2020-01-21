@@ -300,7 +300,7 @@ func (p *WebSocketServer) Start(
 			serverConn := p.registerConn(wsConn, connID, connSecurity)
 
 			// set conn information
-			connStream := NewRPCStream()
+			connStream := newStream()
 			connStream.SetClientCallbackID(0)
 			connStream.WriteString("#.connection.openInformation")
 			connStream.WriteUint64(uint64(serverConn.id))
@@ -339,7 +339,7 @@ func (p *WebSocketServer) Start(
 				}
 				switch mt {
 				case websocket.BinaryMessage:
-					stream := NewRPCStream()
+					stream := newStream()
 					stream.SetWritePos(0)
 					stream.PutBytes(message)
 

@@ -262,7 +262,7 @@ func (p *WebSocketClient) registerCallback() *websocketClientCallback {
 				id:        p.seed,
 				timeNS:    TimeNowNS(),
 				ch:        make(chan bool),
-				stream:    NewRPCStream(),
+				stream:    newStream(),
 				isTimeout: false,
 			}
 			p.Store(ret.id, ret)
@@ -311,7 +311,7 @@ func (p *WebSocketClient) SendMessage(
 	stream.WriteString("@")
 
 	for i := 0; i < len(args); i++ {
-		if stream.Write(args[i]) != RPCStreamWriteOK {
+		if stream.Write(args[i]) != rpcStreamWriteOK {
 			return nil, NewError("args not supported")
 		}
 	}
