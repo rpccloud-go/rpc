@@ -15,8 +15,8 @@ type rpcPerformanceIndicator struct {
 	originMap    sync.Map
 }
 
-// NewPerformanceIndicator ...
-func NewPerformanceIndicator() *rpcPerformanceIndicator {
+// newPerformanceIndicator ...
+func newPerformanceIndicator() *rpcPerformanceIndicator {
 	return &rpcPerformanceIndicator{
 		failed:       0,
 		successArray: [10]int64{},

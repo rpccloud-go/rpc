@@ -402,7 +402,7 @@ func (p *rpcProcessor) mountEcho(
 		),
 		debugString: fmt.Sprintf("%s %s", echoPath, fileLine),
 		argTypes:    argTypes,
-		indicator:   NewPerformanceIndicator(),
+		indicator:   newPerformanceIndicator(),
 	}
 
 	if p.logger != nil {

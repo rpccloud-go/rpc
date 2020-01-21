@@ -8,7 +8,7 @@ import (
 
 func TestPerformanceIndicator_basic(t *testing.T) {
 	assert := newAssert(t)
-	performanceIndicator := NewPerformanceIndicator()
+	performanceIndicator := newPerformanceIndicator()
 
 	for i := 0; i < 1500; i++ {
 		go func(idx int) {
