@@ -131,7 +131,7 @@ func (p *rpcProcessor) Stop() bool {
 }
 
 // PutStream ...
-func (p *rpcProcessor) PutStream(stream *RPCStream) bool {
+func (p *rpcProcessor) PutStream(stream *rpcStream) bool {
 	// PutStream stream in a random thread pool
 	threadPool := p.threadPools[int(GetRandUint32())%len(p.threadPools)]
 	if threadPool != nil {

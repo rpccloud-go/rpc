@@ -14,7 +14,7 @@ func TestNewRPCProcessor(t *testing.T) {
 	assert := newAssert(t)
 
 	logger := NewLogger()
-	callbackFn := func(stream *RPCStream, success bool) {}
+	callbackFn := func(stream *rpcStream, success bool) {}
 
 	processor := newRPCProcessor(logger, 16, 32, callbackFn, nil)
 	assert(processor).IsNotNil()
@@ -430,7 +430,7 @@ func BenchmarkRpcProcessor_Execute(b *testing.B) {
 		NewLogger(),
 		16,
 		16,
-		func(stream *RPCStream, success bool) {
+		func(stream *rpcStream, success bool) {
 			stream.Release()
 		},
 		&TestFuncCache{},

@@ -17,7 +17,7 @@ func (p *rpcCache) Get(fnString string) rpc.FuncCacheType {
 type n = bool
 type o = rpc.Context
 type p = rpc.Return
-type q = *rpc.RPCStream
+type q = rpc.Stream
 type w = rpc.Bytes
 type z = interface{}
 

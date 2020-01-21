@@ -57,7 +57,7 @@ func (p *rpcFuncCacheGenerator) writeHeader(
 		sb.AppendString("type n = bool\n")
 		sb.AppendString("type o = rpc.Context\n")
 		sb.AppendString("type p = rpc.Return\n")
-		sb.AppendString("type q = *rpc.RPCStream\n")
+		sb.AppendString("type q = rpc.Stream\n")
 	}
 	if _, ok := kindMap['B']; ok {
 		sb.AppendString("type r = rpc.Bool\n")

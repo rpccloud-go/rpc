@@ -27,12 +27,12 @@ type FuncCache interface {
 // FuncCacheType ...
 type FuncCacheType = func(
 	ctx *rpcContext,
-	stream *RPCStream,
+	stream *rpcStream,
 	fn interface{},
 ) bool
 
 type fnProcessorCallback = func(
-	stream *RPCStream,
+	stream *rpcStream,
 	success bool,
 )
 
@@ -60,6 +60,8 @@ type Service interface {
 
 // Context ...
 type Context = *rpcContext
+
+type Stream = *rpcStream
 
 // Bool ...
 type Bool = bool

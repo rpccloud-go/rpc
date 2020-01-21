@@ -22,7 +22,7 @@ type websocketClientCallback struct {
 	id        uint32
 	timeNS    int64
 	ch        chan bool
-	stream    *RPCStream
+	stream    *rpcStream
 	isTimeout bool
 }
 

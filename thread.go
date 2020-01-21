@@ -11,9 +11,9 @@ import (
 type rpcThread struct {
 	threadPool     *rpcThreadPool
 	isRunning      bool
-	ch             chan *RPCStream
-	inStream       *RPCStream
-	outStream      *RPCStream
+	ch             chan *rpcStream
+	inStream       *rpcStream
+	outStream      *rpcStream
 	execDepth      uint64
 	execEchoNode   *rpcEchoNode
 	execArgs       []reflect.Value
@@ -27,7 +27,7 @@ func newThread(threadPool *rpcThreadPool) *rpcThread {
 	ret := &rpcThread{
 		threadPool:     threadPool,
 		isRunning:      true,
-		ch:             make(chan *RPCStream),
+		ch:             make(chan *rpcStream),
 		inStream:       nil,
 		outStream:      newStream(),
 		execDepth:      0,
@@ -71,11 +71,11 @@ func (p *rpcThread) stop() bool {
 	}).(bool)
 }
 
-func (p *rpcThread) put(stream *RPCStream) {
+func (p *rpcThread) put(stream *rpcStream) {
 	p.ch <- stream
 }
 
-func (p *rpcThread) eval(inStream *RPCStream) *rpcReturn {
+func (p *rpcThread) eval(inStream *rpcStream) *rpcReturn {
 	processor := p.threadPool.processor
 	timeStart := TimeNowNS()
 	// create context

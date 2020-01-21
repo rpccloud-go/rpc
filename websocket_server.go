@@ -37,7 +37,7 @@ type wsServerConn struct {
 	connIndex  uint32
 	security   string
 	deadlineNS int64
-	streamCH   chan *RPCStream
+	streamCH   chan *rpcStream
 	sequence   uint32
 	sync.Mutex
 }
@@ -90,7 +90,7 @@ func NewWebSocketServer(fnCache FuncCache) *WebSocketServer {
 		server.logger,
 		32,
 		32,
-		func(stream *RPCStream, success bool) {
+		func(stream *rpcStream, success bool) {
 			// Todo: deal error (chan close)
 			if serverConn := server.getConnByID(
 				stream.GetClientConnID(),
@@ -157,7 +157,7 @@ func (p *WebSocketServer) registerConn(
 				wsConn:     unsafe.Pointer(wsConn),
 				connIndex:  0,
 				deadlineNS: 0,
-				streamCH:   make(chan *RPCStream, 256),
+				streamCH:   make(chan *rpcStream, 256),
 			}
 			p.Store(id, ret)
 			go p.serverConnWriteRoutine(ret)
@@ -445,7 +445,7 @@ func (p *WebSocketServer) onClose(serverConn *wsServerConn) {
 	p.logger.Infof("WebSocketServerConn[%d]: closed", serverConn.id)
 }
 
-func (p *WebSocketServer) onStream(_ *wsServerConn, stream *RPCStream) {
+func (p *WebSocketServer) onStream(_ *wsServerConn, stream *rpcStream) {
 	p.processor.PutStream(stream)
 }
 

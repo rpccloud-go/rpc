@@ -291,7 +291,7 @@ func TestRPCStream_basic(t *testing.T) {
 	assert := newAssert(t)
 
 	// test rpcStreamCache
-	stream := rpcStreamCache.Get().(*RPCStream)
+	stream := rpcStreamCache.Get().(*rpcStream)
 	assert(len(stream.frames)).Equals(1)
 	assert(cap(stream.frames)).Equals(8)
 	assert(stream.readSeg).Equals(0)
