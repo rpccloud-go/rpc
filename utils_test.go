@@ -97,18 +97,18 @@ func TestTimeSpanBetween(t *testing.T) {
 	assert := newAssert(t)
 	start := timeNowNS()
 	time.Sleep(50 * time.Millisecond)
-	dur := TimeSpanBetween(start, timeNowNS())
+	dur := timeSpanBetween(start, timeNowNS())
 	assert(int64(dur) > int64(40*time.Millisecond)).IsTrue()
 	assert(int64(dur) < int64(60*time.Millisecond)).IsTrue()
 }
 
 func TestGetSeed(t *testing.T) {
 	assert := newAssert(t)
-	seed := GetSeed()
+	seed := getSeed()
 	assert(seed > 10000).IsTrue()
 
 	for i := int64(0); i < 1000; i++ {
-		assert(GetSeed()).Equals(seed + 1 + i)
+		assert(getSeed()).Equals(seed + 1 + i)
 	}
 }
 

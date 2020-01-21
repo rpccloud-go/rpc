@@ -102,7 +102,7 @@ func (p *Logger) removeSubscription(id int64) bool {
 func (p *Logger) Subscribe() *LogSubscription {
 	p.Lock()
 	subscription := &LogSubscription{
-		id:     GetSeed(),
+		id:     getSeed(),
 		logger: p,
 		Debug:  nil,
 		Info:   nil,

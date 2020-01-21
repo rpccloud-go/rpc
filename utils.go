@@ -108,13 +108,13 @@ func timeSpanFrom(startNS int64) time.Duration {
 	return time.Duration(timeNowNS() - startNS)
 }
 
-// TimeSpanBetween get time.Duration between startNS and endNS
-func TimeSpanBetween(startNS int64, endNS int64) time.Duration {
+// timeSpanBetween get time.Duration between startNS and endNS
+func timeSpanBetween(startNS int64, endNS int64) time.Duration {
 	return time.Duration(endNS - startNS)
 }
 
-// GetSeed get int64 seed, it is goroutine safety
-func GetSeed() int64 {
+// getSeed get int64 seed, it is goroutine safety
+func getSeed() int64 {
 	return atomic.AddInt64(&seed, 1)
 }
 
