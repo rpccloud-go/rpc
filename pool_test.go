@@ -43,7 +43,7 @@ func TestRpcThreadPool_stop(t *testing.T) {
 			time.Sleep(99999999 * time.Second)
 			return ctx.OK(true)
 		}),
-		GetStackString(0),
+		getStackString(0),
 	)
 
 	stream := newStream()

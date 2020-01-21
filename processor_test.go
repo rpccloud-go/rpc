@@ -363,7 +363,7 @@ func TestRPCProcessor_mountEcho(t *testing.T) {
 		"testOK",
 		true,
 		func(ctx Context, _ bool, _ Map) Return { return nilReturn },
-		GetStackString(0),
+		getStackString(0),
 	})).IsNil()
 
 	assert(processor.echosMap["$:testOK"].serviceNode).

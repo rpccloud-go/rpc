@@ -118,8 +118,8 @@ func GetSeed() int64 {
 	return atomic.AddInt64(&seed, 1)
 }
 
-// GetStackString reports the call stack information
-func GetStackString(skip uint) string {
+// getStackString reports the call stack information
+func getStackString(skip uint) string {
 	sb := NewStringBuilder()
 
 	idx := uint(1)
@@ -145,8 +145,8 @@ func GetStackString(skip uint) string {
 	return ret
 }
 
-// GetByteArrayDebugString get the debug string of []byte
-func GetByteArrayDebugString(bs []byte) string {
+// getByteArrayDebugString get the debug string of []byte
+func getByteArrayDebugString(bs []byte) string {
 	sb := stringBuilderPool.Get().(*StringBuilder)
 	first := true
 	for i := 0; i < len(bs); i++ {
@@ -165,8 +165,8 @@ func GetByteArrayDebugString(bs []byte) string {
 	return ret
 }
 
-// ConvertOrdinalToString ...
-func ConvertOrdinalToString(n uint) string {
+// convertOrdinalToString ...
+func convertOrdinalToString(n uint) string {
 	if n == 0 {
 		return ""
 	}
@@ -218,8 +218,8 @@ func ConvertToIsoDateString(date time.Time) string {
 	return string(buf)
 }
 
-// IsUTF8Bytes ...
-func IsUTF8Bytes(bytes []byte) bool {
+// isUTF8Bytes ...
+func isUTF8Bytes(bytes []byte) bool {
 	idx := 0
 	length := len(bytes)
 
@@ -256,8 +256,8 @@ func IsUTF8Bytes(bytes []byte) bool {
 	return idx == length
 }
 
-// GetURLBySchemeHostPortAndPath get the url by connection parameters
-func GetURLBySchemeHostPortAndPath(
+// getURLBySchemeHostPortAndPath get the url by connection parameters
+func getURLBySchemeHostPortAndPath(
 	scheme string,
 	host string,
 	port uint16,
@@ -273,8 +273,8 @@ func GetURLBySchemeHostPortAndPath(
 	return ""
 }
 
-// FindLinesByPrefix find the lines start with prefix string
-func FindLinesByPrefix(debug string, prefix string) []string {
+// findLinesByPrefix find the lines start with prefix string
+func findLinesByPrefix(debug string, prefix string) []string {
 	ret := make([]string, 0, 0)
 	dbgArr := strings.Split(debug, "\n")
 	for _, v := range dbgArr {
@@ -285,8 +285,8 @@ func FindLinesByPrefix(debug string, prefix string) []string {
 	return ret
 }
 
-// AddPrefixPerLine ...
-func AddPrefixPerLine(origin string, prefix string) string {
+// addPrefixPerLine ...
+func addPrefixPerLine(origin string, prefix string) string {
 	sb := NewStringBuilder()
 	arr := strings.Split(origin, "\n")
 	first := true

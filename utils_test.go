@@ -168,12 +168,12 @@ func TestConvertToIsoDateString(t *testing.T) {
 
 func TestGetStackString(t *testing.T) {
 	assert := newAssert(t)
-	assert(FindLinesByPrefix(
-		GetStackString(0),
+	assert(findLinesByPrefix(
+		getStackString(0),
 		"-01",
 	)[0]).Contains("TestGetStackString")
-	assert(FindLinesByPrefix(
-		GetStackString(0),
+	assert(findLinesByPrefix(
+		getStackString(0),
 		"-01",
 	)[0]).Contains("utils_test")
 }
@@ -181,25 +181,25 @@ func TestGetStackString(t *testing.T) {
 func TestFindLinesByPrefix(t *testing.T) {
 	assert := newAssert(t)
 
-	ret := FindLinesByPrefix("", "")
+	ret := findLinesByPrefix("", "")
 	assert(len(ret)).Equals(1)
 	assert(ret[0]).Equals("")
 
-	ret = FindLinesByPrefix("", "hello")
+	ret = findLinesByPrefix("", "hello")
 	assert(len(ret)).Equals(0)
 
-	ret = FindLinesByPrefix("hello", "dd")
+	ret = findLinesByPrefix("hello", "dd")
 	assert(len(ret)).Equals(0)
 
-	ret = FindLinesByPrefix("  hello world", "hello")
+	ret = findLinesByPrefix("  hello world", "hello")
 	assert(len(ret)).Equals(1)
 	assert(ret[0]).Equals("  hello world")
 
-	ret = FindLinesByPrefix(" \t hello world", "hello")
+	ret = findLinesByPrefix(" \t hello world", "hello")
 	assert(len(ret)).Equals(1)
 	assert(ret[0]).Equals(" \t hello world")
 
-	ret = FindLinesByPrefix(" \t hello world\nhello\n", "hello")
+	ret = findLinesByPrefix(" \t hello world\nhello\n", "hello")
 	assert(len(ret)).Equals(2)
 	assert(ret[0]).Equals(" \t hello world")
 	assert(ret[1]).Equals("hello")
@@ -207,19 +207,19 @@ func TestFindLinesByPrefix(t *testing.T) {
 
 func TestGetByteArrayDebugString(t *testing.T) {
 	assert := newAssert(t)
-	assert(GetByteArrayDebugString([]byte{})).Equals(
+	assert(getByteArrayDebugString([]byte{})).Equals(
 		"",
 	)
-	assert(GetByteArrayDebugString([]byte{1, 2})).Equals(
+	assert(getByteArrayDebugString([]byte{1, 2})).Equals(
 		"0000: 0x01, 0x02, ",
 	)
-	assert(GetByteArrayDebugString(
+	assert(getByteArrayDebugString(
 		[]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 	)).Equals(
 		"0000: 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, " +
 			"0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, ",
 	)
-	assert(GetByteArrayDebugString(
+	assert(getByteArrayDebugString(
 		[]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
 	)).Equals(
 		"0000: 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, " +
@@ -230,43 +230,43 @@ func TestGetByteArrayDebugString(t *testing.T) {
 func TestGetUrlBySchemeHostPortAndPath(t *testing.T) {
 	assert := newAssert(t)
 
-	assert(GetURLBySchemeHostPortAndPath("", "127.0.0.1", 8080, "/world")).
+	assert(getURLBySchemeHostPortAndPath("", "127.0.0.1", 8080, "/world")).
 		Equals("")
-	assert(GetURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "")).
+	assert(getURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "")).
 		Equals("ws://127.0.0.1:8080/")
-	assert(GetURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "/")).
+	assert(getURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "/")).
 		Equals("ws://127.0.0.1:8080/")
-	assert(GetURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "world")).
+	assert(getURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "world")).
 		Equals("ws://127.0.0.1:8080/world")
-	assert(GetURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "/world")).
+	assert(getURLBySchemeHostPortAndPath("ws", "127.0.0.1", 8080, "/world")).
 		Equals("ws://127.0.0.1:8080/world")
 }
 
 func TestConvertOrdinalToString(t *testing.T) {
 	assert := newAssert(t)
 
-	assert(ConvertOrdinalToString(0)).Equals("")
-	assert(ConvertOrdinalToString(1)).Equals("1st")
-	assert(ConvertOrdinalToString(2)).Equals("2nd")
-	assert(ConvertOrdinalToString(3)).Equals("3rd")
-	assert(ConvertOrdinalToString(4)).Equals("4th")
-	assert(ConvertOrdinalToString(10)).Equals("10th")
-	assert(ConvertOrdinalToString(100)).Equals("100th")
+	assert(convertOrdinalToString(0)).Equals("")
+	assert(convertOrdinalToString(1)).Equals("1st")
+	assert(convertOrdinalToString(2)).Equals("2nd")
+	assert(convertOrdinalToString(3)).Equals("3rd")
+	assert(convertOrdinalToString(4)).Equals("4th")
+	assert(convertOrdinalToString(10)).Equals("10th")
+	assert(convertOrdinalToString(100)).Equals("100th")
 }
 
 func TestAddPrefixPerLine(t *testing.T) {
 	assert := newAssert(t)
 
-	assert(AddPrefixPerLine("", "")).Equals("")
-	assert(AddPrefixPerLine("a", "")).Equals("a")
-	assert(AddPrefixPerLine("\n", "")).Equals("\n")
-	assert(AddPrefixPerLine("a\n", "")).Equals("a\n")
-	assert(AddPrefixPerLine("a\nb", "")).Equals("a\nb")
-	assert(AddPrefixPerLine("", "-")).Equals("-")
-	assert(AddPrefixPerLine("a", "-")).Equals("-a")
-	assert(AddPrefixPerLine("\n", "-")).Equals("-\n-")
-	assert(AddPrefixPerLine("a\n", "-")).Equals("-a\n-")
-	assert(AddPrefixPerLine("a\nb", "-")).Equals("-a\n-b")
+	assert(addPrefixPerLine("", "")).Equals("")
+	assert(addPrefixPerLine("a", "")).Equals("a")
+	assert(addPrefixPerLine("\n", "")).Equals("\n")
+	assert(addPrefixPerLine("a\n", "")).Equals("a\n")
+	assert(addPrefixPerLine("a\nb", "")).Equals("a\nb")
+	assert(addPrefixPerLine("", "-")).Equals("-")
+	assert(addPrefixPerLine("a", "-")).Equals("-a")
+	assert(addPrefixPerLine("\n", "-")).Equals("-\n-")
+	assert(addPrefixPerLine("a\n", "-")).Equals("-a\n-")
+	assert(addPrefixPerLine("a\nb", "-")).Equals("-a\n-b")
 }
 
 func TestTryToInterfaceArray(t *testing.T) {
@@ -339,13 +339,13 @@ func TestIsContains(t *testing.T) {
 func TestIsUTF8Bytes(t *testing.T) {
 	assert := newAssert(t)
 
-	assert(IsUTF8Bytes(([]byte)("abc"))).IsTrue()
-	assert(IsUTF8Bytes(([]byte)("abc！#@¥#%#%#¥%"))).IsTrue()
-	assert(IsUTF8Bytes(([]byte)("中文"))).IsTrue()
-	assert(IsUTF8Bytes(([]byte)("🀄️文👃d"))).IsTrue()
-	assert(IsUTF8Bytes(([]byte)("🀄️文👃"))).IsTrue()
+	assert(isUTF8Bytes(([]byte)("abc"))).IsTrue()
+	assert(isUTF8Bytes(([]byte)("abc！#@¥#%#%#¥%"))).IsTrue()
+	assert(isUTF8Bytes(([]byte)("中文"))).IsTrue()
+	assert(isUTF8Bytes(([]byte)("🀄️文👃d"))).IsTrue()
+	assert(isUTF8Bytes(([]byte)("🀄️文👃"))).IsTrue()
 
-	assert(IsUTF8Bytes(([]byte)(`
+	assert(isUTF8Bytes(([]byte)(`
     😀 😁 😂 🤣 😃 😄 😅 😆 😉 😊 😋 😎 😍 😘 🥰 😗 😙 😚 ☺️ 🙂 🤗 🤩 🤔 🤨
     🙄 😏 😣 😥 😮 🤐 😯 😪 😫 😴 😌 😛 😜 😝 🤤 😒 😓 😔 😕 🙃 🤑 😲 ☹️ 🙁
     😤 😢 😭 😦 😧 😨 😩 🤯 😬 😰 😱 🥵 🥶 😳 🤪 😵 😡 😠 🤬 😷 🤒 🤕 🤢
@@ -362,19 +362,19 @@ func TestIsUTF8Bytes(t *testing.T) {
     💍 💄 💋 👄 👅 👂 👃 👣 👁 👀 🧠 🦴 🦷 🗣 👤 👥
   `))).IsTrue()
 
-	assert(IsUTF8Bytes([]byte{0xC1})).IsFalse()
-	assert(IsUTF8Bytes([]byte{0xC1, 0x01})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xC1})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xC1, 0x01})).IsFalse()
 
-	assert(IsUTF8Bytes([]byte{0xE1, 0x80})).IsFalse()
-	assert(IsUTF8Bytes([]byte{0xE1, 0x01, 0x81})).IsFalse()
-	assert(IsUTF8Bytes([]byte{0xE1, 0x80, 0x01})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xE1, 0x80})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xE1, 0x01, 0x81})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xE1, 0x80, 0x01})).IsFalse()
 
-	assert(IsUTF8Bytes([]byte{0xF1, 0x80, 0x80})).IsFalse()
-	assert(IsUTF8Bytes([]byte{0xF1, 0x70, 0x80, 0x80})).IsFalse()
-	assert(IsUTF8Bytes([]byte{0xF1, 0x80, 0x70, 0x80})).IsFalse()
-	assert(IsUTF8Bytes([]byte{0xF1, 0x80, 0x80, 0x70})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xF1, 0x80, 0x80})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xF1, 0x70, 0x80, 0x80})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xF1, 0x80, 0x70, 0x80})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xF1, 0x80, 0x80, 0x70})).IsFalse()
 
-	assert(IsUTF8Bytes([]byte{0xFF, 0x80, 0x80, 0x70})).IsFalse()
+	assert(isUTF8Bytes([]byte{0xFF, 0x80, 0x80, 0x70})).IsFalse()
 }
 
 func TestGetArgumentsErrorPosition(t *testing.T) {

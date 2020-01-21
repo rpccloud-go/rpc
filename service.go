@@ -25,7 +25,7 @@ func NewService() Service {
 	return &rpcService{
 		children: make([]*rpcNodeMeta, 0, 0),
 		echos:    make([]*rpcEchoMeta, 0, 0),
-		debug:    GetStackString(1),
+		debug:    getStackString(1),
 	}
 }
 
@@ -41,7 +41,7 @@ func (p *rpcService) Echo(
 			name:    name,
 			export:  export,
 			handler: handler,
-			debug:   GetStackString(3),
+			debug:   getStackString(3),
 		})
 	})
 	return p
@@ -60,7 +60,7 @@ func (p *rpcService) AddService(name string, service Service) Service {
 		p.children = append(p.children, &rpcNodeMeta{
 			name:        name,
 			serviceMeta: serviceMeta,
-			debug:       GetStackString(3),
+			debug:       getStackString(3),
 		})
 	})
 

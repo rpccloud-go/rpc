@@ -45,7 +45,7 @@ func (p *rpcContext) OK(value interface{}) *rpcReturn {
 		stream.WriteBool(true)
 
 		if stream.Write(value) != rpcStreamWriteOK {
-			return p.writeError("return type is error", GetStackString(1))
+			return p.writeError("return type is error", getStackString(1))
 		}
 
 		thread.execSuccessful = true
@@ -71,6 +71,6 @@ func (p *rpcContext) Errorf(format string, a ...interface{}) *rpcReturn {
 	return p.Error(
 		NewErrorByDebug(
 			fmt.Sprintf(format, a...),
-			GetStackString(1),
+			getStackString(1),
 		))
 }

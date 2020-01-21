@@ -56,7 +56,7 @@ func (p *rpcError) Error() string {
 	}
 
 	if len(p.debug) > 0 {
-		sb.AppendFormat("Debug:\n%s\n", AddPrefixPerLine(p.debug, "\t"))
+		sb.AppendFormat("Debug:\n%s\n", addPrefixPerLine(p.debug, "\t"))
 	}
 	var ret = sb.String()
 	sb.Release()

@@ -91,7 +91,7 @@ func (p *rpcThread) eval(inStream *rpcStream) *rpcReturn {
 					p.execEchoNode.callString,
 					err,
 				),
-				GetStackString(1),
+				getStackString(1),
 			)
 		}
 		if p.execEchoNode != nil {

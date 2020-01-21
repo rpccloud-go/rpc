@@ -1422,7 +1422,7 @@ func (p *rpcStream) ReadString() (string, bool) {
 		if p.isSafetyReadNBytesInCurrentFrame(strLen + 2) {
 			if p.readFrame[p.readIndex+strLen+1] == 0 {
 				b := p.readFrame[p.readIndex+1 : p.readIndex+strLen+1]
-				if IsUTF8Bytes(b) {
+				if isUTF8Bytes(b) {
 					p.readIndex += strLen + 2
 					return string(b), true
 				}
@@ -1437,7 +1437,7 @@ func (p *rpcStream) ReadString() (string, bool) {
 				p.readFrame = *p.frames[p.readSeg]
 				p.readIndex = copy(b[copyBytes:], p.readFrame)
 			}
-			if p.readFrame[p.readIndex] == 0 && IsUTF8Bytes(b) {
+			if p.readFrame[p.readIndex] == 0 && isUTF8Bytes(b) {
 				p.gotoNextReadByteUnsafe()
 				return string(b), true
 			}
@@ -1466,7 +1466,7 @@ func (p *rpcStream) ReadString() (string, bool) {
 			if p.isSafetyReadNBytesInCurrentFrame(strLen + 1) {
 				if p.readFrame[p.readIndex+strLen] == 0 {
 					b := p.readFrame[p.readIndex : p.readIndex+strLen]
-					if IsUTF8Bytes(b) {
+					if isUTF8Bytes(b) {
 						p.readIndex += strLen + 1
 						return string(b), true
 					}
@@ -1482,7 +1482,7 @@ func (p *rpcStream) ReadString() (string, bool) {
 						p.gotoNextReadFrameUnsafe()
 					}
 				}
-				if p.readFrame[p.readIndex] == 0 && IsUTF8Bytes(b) {
+				if p.readFrame[p.readIndex] == 0 && isUTF8Bytes(b) {
 					p.gotoNextReadByteUnsafe()
 					return string(b), true
 				}
@@ -1508,7 +1508,7 @@ func (p *rpcStream) ReadUnsafeString() (ret string, ok bool) {
 		if p.isSafetyReadNBytesInCurrentFrame(strLen + 2) {
 			if p.readFrame[p.readIndex+strLen+1] == 0 {
 				b := p.readFrame[p.readIndex+1 : p.readIndex+strLen+1]
-				if IsUTF8Bytes(b) {
+				if isUTF8Bytes(b) {
 					pString := (*reflect.StringHeader)(unsafe.Pointer(&ret))
 					pBytes := (*reflect.SliceHeader)(unsafe.Pointer(&b))
 					pString.Len = strLen
@@ -1527,7 +1527,7 @@ func (p *rpcStream) ReadUnsafeString() (ret string, ok bool) {
 				p.readFrame = *p.frames[p.readSeg]
 				p.readIndex = copy(b[copyBytes:], p.readFrame)
 			}
-			if p.readFrame[p.readIndex] == 0 && IsUTF8Bytes(b) {
+			if p.readFrame[p.readIndex] == 0 && isUTF8Bytes(b) {
 				p.gotoNextReadByteUnsafe()
 				return string(b), true
 			}
@@ -1556,7 +1556,7 @@ func (p *rpcStream) ReadUnsafeString() (ret string, ok bool) {
 			if p.isSafetyReadNBytesInCurrentFrame(strLen + 1) {
 				if p.readFrame[p.readIndex+strLen] == 0 {
 					b := p.readFrame[p.readIndex : p.readIndex+strLen]
-					if IsUTF8Bytes(b) {
+					if isUTF8Bytes(b) {
 						pString := (*reflect.StringHeader)(unsafe.Pointer(&ret))
 						pBytes := (*reflect.SliceHeader)(unsafe.Pointer(&b))
 						pString.Len = strLen
@@ -1576,7 +1576,7 @@ func (p *rpcStream) ReadUnsafeString() (ret string, ok bool) {
 						p.gotoNextReadFrameUnsafe()
 					}
 				}
-				if p.readFrame[p.readIndex] == 0 && IsUTF8Bytes(b) {
+				if p.readFrame[p.readIndex] == 0 && isUTF8Bytes(b) {
 					p.gotoNextReadByteUnsafe()
 					return string(b), true
 				}

@@ -218,7 +218,7 @@ func (p *WebSocketServer) AddService(
 	name string,
 	service Service,
 ) *WebSocketServer {
-	err := p.processor.AddService(name, service, GetStackString(1))
+	err := p.processor.AddService(name, service, getStackString(1))
 	if err != nil {
 		p.logger.Error(err.Error())
 	}
@@ -269,7 +269,7 @@ func (p *WebSocketServer) Start(
 	if atomic.CompareAndSwapInt32(&p.status, wsServerClosed, wsServerOpening) {
 		p.logger.Infof(
 			"WebSocketServer: start at %s",
-			GetURLBySchemeHostPortAndPath("ws", host, port, path),
+			getURLBySchemeHostPortAndPath("ws", host, port, path),
 		)
 		p.processor.Start()
 		serverMux := http.NewServeMux()

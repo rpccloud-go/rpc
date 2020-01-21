@@ -237,8 +237,8 @@ func (p *rpcProcessor) mountNode(
 			),
 			fmt.Sprintf(
 				"Current:\n%s\nConflict:\n%s",
-				AddPrefixPerLine(nodeMeta.debug, "\t"),
-				AddPrefixPerLine(item.addMeta.debug, "\t"),
+				addPrefixPerLine(nodeMeta.debug, "\t"),
+				addPrefixPerLine(item.addMeta.debug, "\t"),
 			),
 		)
 	}
@@ -305,8 +305,8 @@ func (p *rpcProcessor) mountEcho(
 			),
 			fmt.Sprintf(
 				"Current:\n%s\nConflict:\n%s",
-				AddPrefixPerLine(echoMeta.debug, "\t"),
-				AddPrefixPerLine(item.echoMeta.debug, "\t"),
+				addPrefixPerLine(echoMeta.debug, "\t"),
+				addPrefixPerLine(item.echoMeta.debug, "\t"),
 			),
 		)
 	}
@@ -346,7 +346,7 @@ func (p *rpcProcessor) mountEcho(
 		return NewErrorByDebug(
 			fmt.Sprintf(
 				"Echo handler %s argument type <%s> not supported",
-				ConvertOrdinalToString(1+uint(argumentsErrorPos)),
+				convertOrdinalToString(1+uint(argumentsErrorPos)),
 				fmt.Sprintf("%s", fn.Type().In(argumentsErrorPos)),
 			),
 			echoMeta.debug,
@@ -367,7 +367,7 @@ func (p *rpcProcessor) mountEcho(
 
 	// mount the echoRecord
 	fileLine := ""
-	debugArr := FindLinesByPrefix(echoMeta.debug, "-01")
+	debugArr := findLinesByPrefix(echoMeta.debug, "-01")
 	if len(debugArr) > 0 {
 		arr := strings.Split(debugArr[0], " ")
 		if len(arr) == 3 {
