@@ -176,7 +176,7 @@ func (p *WebSocketServer) unregisterConn(id uint32, force bool) bool {
 		atomic.StorePointer(&serverConn.(*wsServerConn).wsConn, nil)
 		atomic.StoreInt64(
 			&serverConn.(*wsServerConn).deadlineNS,
-			TimeNowNS()+35*int64(time.Second),
+			timeNowNS()+35*int64(time.Second),
 		)
 		return true
 	}
@@ -186,7 +186,7 @@ func (p *WebSocketServer) unregisterConn(id uint32, force bool) bool {
 
 func (p *WebSocketServer) swipeConn() {
 	for atomic.LoadInt32(&p.status) != wsServerClosed {
-		nowNS := TimeNowNS()
+		nowNS := timeNowNS()
 		p.Range(func(key, value interface{}) bool {
 			v, ok := value.(*wsServerConn)
 			if ok && v != nil {
@@ -320,7 +320,7 @@ func (p *WebSocketServer) Start(
 			}()
 
 			for {
-				nextTimeoutNS := TimeNowNS() +
+				nextTimeoutNS := timeNowNS() +
 					int64(atomic.LoadUint64(&p.readTimeoutNS))
 				if err := wsConn.SetReadDeadline(time.Unix(
 					nextTimeoutNS/int64(time.Second),

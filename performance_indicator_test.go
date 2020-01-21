@@ -31,14 +31,14 @@ func TestPerformanceIndicator_basic(t *testing.T) {
 
 	for n := 0; n < 20; n++ {
 		time.Sleep(100 * time.Millisecond)
-		qps, duration := performanceIndicator.Calculate(TimeNowNS())
+		qps, duration := performanceIndicator.Calculate(timeNowNS())
 		count := qps * int64(duration) / int64(time.Second)
 		assert(math.Abs(float64(count-3000)) < 50).IsTrue()
 	}
 
 	time.Sleep(200 * time.Millisecond)
 
-	nowNS := TimeNowNS()
+	nowNS := timeNowNS()
 	performanceIndicator.Calculate(nowNS)
 	assert(performanceIndicator.Calculate(nowNS)).
 		Equals(int64(0), time.Duration(0))

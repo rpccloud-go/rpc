@@ -15,13 +15,13 @@ func TestTimeNowNS(t *testing.T) {
 	assert := newAssert(t)
 
 	for i := 0; i < 500000; i++ {
-		nowNS := TimeNowNS()
+		nowNS := timeNowNS()
 		assert(time.Now().UnixNano()-nowNS < int64(20*time.Millisecond)).IsTrue()
 		assert(time.Now().UnixNano()-nowNS > int64(-20*time.Millisecond)).IsTrue()
 	}
 
 	for i := 0; i < 500; i++ {
-		nowNS := TimeNowNS()
+		nowNS := timeNowNS()
 		assert(time.Now().UnixNano()-nowNS < int64(20*time.Millisecond)).IsTrue()
 		assert(time.Now().UnixNano()-nowNS > int64(-20*time.Millisecond)).IsTrue()
 		time.Sleep(time.Millisecond)
@@ -30,7 +30,7 @@ func TestTimeNowNS(t *testing.T) {
 	// hack timeNowPointer to nil
 	atomic.StorePointer(&timeNowPointer, nil)
 	for i := 0; i < 500; i++ {
-		nowNS := TimeNowNS()
+		nowNS := timeNowNS()
 		assert(time.Now().UnixNano()-nowNS < int64(20*time.Millisecond)).IsTrue()
 		assert(time.Now().UnixNano()-nowNS > int64(-20*time.Millisecond)).IsTrue()
 		time.Sleep(time.Millisecond)
@@ -39,7 +39,7 @@ func TestTimeNowNS(t *testing.T) {
 
 func TestTimeNowMS(t *testing.T) {
 	assert := newAssert(t)
-	nowNS := TimeNowMS() * int64(time.Millisecond)
+	nowNS := timeNowMS() * int64(time.Millisecond)
 	assert(time.Now().UnixNano()-nowNS < int64(20*time.Millisecond)).IsTrue()
 	assert(time.Now().UnixNano()-nowNS > int64(-20*time.Millisecond)).IsTrue()
 }
@@ -50,7 +50,7 @@ func TestTimeNowISOString(t *testing.T) {
 	for i := 0; i < 500; i++ {
 		if nowNS, err := time.Parse(
 			"2006-01-02T15:04:05.999Z07:00",
-			TimeNowISOString(),
+			timeNowISOString(),
 		); err == nil {
 			assert(
 				time.Now().UnixNano()-nowNS.UnixNano() < int64(20*time.Millisecond),
@@ -69,7 +69,7 @@ func TestTimeNowISOString(t *testing.T) {
 	for i := 0; i < 500; i++ {
 		if nowNS, err := time.Parse(
 			"2006-01-02T15:04:05.999Z07:00",
-			TimeNowISOString(),
+			timeNowISOString(),
 		); err == nil {
 			assert(
 				time.Now().UnixNano()-nowNS.UnixNano() < int64(20*time.Millisecond),
@@ -86,18 +86,18 @@ func TestTimeNowISOString(t *testing.T) {
 
 func TestTimeSpanFrom(t *testing.T) {
 	assert := newAssert(t)
-	ns := TimeNowNS()
+	ns := timeNowNS()
 	time.Sleep(50 * time.Millisecond)
-	dur := TimeSpanFrom(ns)
+	dur := timeSpanFrom(ns)
 	assert(int64(dur) > int64(40*time.Millisecond)).IsTrue()
 	assert(int64(dur) < int64(60*time.Millisecond)).IsTrue()
 }
 
 func TestTimeSpanBetween(t *testing.T) {
 	assert := newAssert(t)
-	start := TimeNowNS()
+	start := timeNowNS()
 	time.Sleep(50 * time.Millisecond)
-	dur := TimeSpanBetween(start, TimeNowNS())
+	dur := TimeSpanBetween(start, timeNowNS())
 	assert(int64(dur) > int64(40*time.Millisecond)).IsTrue()
 	assert(int64(dur) < int64(60*time.Millisecond)).IsTrue()
 }
@@ -122,7 +122,7 @@ func TestConvertToIsoDateString(t *testing.T) {
 	for i := 0; i < 1000000; i++ {
 		parseTime, err := time.Parse(
 			"2006-01-02T15:04:05.999Z07:00",
-			ConvertToIsoDateString(start),
+			convertToIsoDateString(start),
 		)
 		assert(err).IsNil()
 		assert(parseTime.UnixNano()).Equals(start.UnixNano())
@@ -134,35 +134,35 @@ func TestConvertToIsoDateString(t *testing.T) {
 		"9998-01-01T00:00:00+00:00",
 	)
 	largeTime = largeTime.Add(1000000 * time.Hour)
-	assert(ConvertToIsoDateString(largeTime)).
+	assert(convertToIsoDateString(largeTime)).
 		Equals("9999-01-30T16:00:00.000+00:00")
 
 	time1, _ := time.Parse(
 		"2006-01-02T15:04:05.999Z07:00",
 		"2222-12-22T11:11:11.333-11:59",
 	)
-	assert(ConvertToIsoDateString(time1)).
+	assert(convertToIsoDateString(time1)).
 		Equals("2222-12-22T11:11:11.333-11:59")
 
 	time2, _ := time.Parse(
 		"2006-01-02T15:04:05.999Z07:00",
 		"2222-12-22T11:11:11.333+11:59",
 	)
-	assert(ConvertToIsoDateString(time2)).
+	assert(convertToIsoDateString(time2)).
 		Equals("2222-12-22T11:11:11.333+11:59")
 
 	time3, _ := time.Parse(
 		"2006-01-02T15:04:05.999Z07:00",
 		"2222-12-22T11:11:11.333+00:00",
 	)
-	assert(ConvertToIsoDateString(time3)).
+	assert(convertToIsoDateString(time3)).
 		Equals("2222-12-22T11:11:11.333+00:00")
 
 	time4, _ := time.Parse(
 		"2006-01-02T15:04:05.999Z07:00",
 		"2222-12-22T11:11:11.333-00:00",
 	)
-	assert(ConvertToIsoDateString(time4)).
+	assert(convertToIsoDateString(time4)).
 		Equals("2222-12-22T11:11:11.333+00:00")
 }
 

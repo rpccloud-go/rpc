@@ -77,7 +77,7 @@ func (p *rpcThread) put(stream *rpcStream) {
 
 func (p *rpcThread) eval(inStream *rpcStream) *rpcReturn {
 	processor := p.threadPool.processor
-	timeStart := TimeNowNS()
+	timeStart := timeNowNS()
 	// create context
 	p.inStream = inStream
 	p.execSuccessful = false
@@ -96,7 +96,7 @@ func (p *rpcThread) eval(inStream *rpcStream) *rpcReturn {
 		}
 		if p.execEchoNode != nil {
 			p.execEchoNode.indicator.Count(
-				time.Duration(TimeNowNS()-timeStart),
+				time.Duration(timeNowNS()-timeStart),
 				p.from,
 				p.execSuccessful,
 			)

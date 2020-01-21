@@ -79,9 +79,9 @@ func (p *WebSocketClient) isRunning() bool {
 func (p *WebSocketClient) doConnect() {
 	time.Sleep(30 * time.Millisecond)
 	for p.isRunning() {
-		startConnMS := TimeNowMS()
+		startConnMS := timeNowMS()
 		p.connect()
-		connMS := TimeNowMS() - startConnMS
+		connMS := timeNowMS() - startConnMS
 		if connMS < 2000 && p.isRunning() {
 			time.Sleep(time.Duration(2000-connMS) * time.Millisecond)
 		}
@@ -121,7 +121,7 @@ func (p *WebSocketClient) doSend() {
 
 func (p *WebSocketClient) doTimeout() {
 	for p.isRunning() {
-		nowNS := TimeNowNS()
+		nowNS := timeNowNS()
 		p.Range(func(key, value interface{}) bool {
 			v, ok := value.(*websocketClientCallback)
 			if ok && v != nil {
@@ -145,7 +145,7 @@ func (p *WebSocketClient) readBinaryMessage(
 	}
 
 	// set next read dead line
-	nextTimeoutNS := TimeNowNS() + readTimeoutNS
+	nextTimeoutNS := timeNowNS() + readTimeoutNS
 	if err := p.conn.SetReadDeadline(time.Unix(
 		nextTimeoutNS/int64(time.Second),
 		nextTimeoutNS%int64(time.Second),
@@ -260,7 +260,7 @@ func (p *WebSocketClient) registerCallback() *websocketClientCallback {
 		if _, ok := p.Load(p.seed); !ok {
 			ret = &websocketClientCallback{
 				id:        p.seed,
-				timeNS:    TimeNowNS(),
+				timeNS:    timeNowNS(),
 				ch:        make(chan bool),
 				stream:    newStream(),
 				isTimeout: false,

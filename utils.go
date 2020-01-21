@@ -68,7 +68,7 @@ func init() {
 			case t := <-tick.C:
 				atomic.StorePointer(&timeNowPointer, unsafe.Pointer(&timeNow{
 					timeNS:        t.UnixNano(),
-					timeISOString: ConvertToIsoDateString(t),
+					timeISOString: convertToIsoDateString(t),
 				}))
 			}
 		}
@@ -80,8 +80,8 @@ type timeNow struct {
 	timeISOString string
 }
 
-// TimeNowNS get now nanoseconds from 1970-01-01
-func TimeNowNS() int64 {
+// timeNowNS get now nanoseconds from 1970-01-01
+func timeNowNS() int64 {
 	ret := (*timeNow)(atomic.LoadPointer(&timeNowPointer))
 	if ret != nil {
 		return ret.timeNS
@@ -89,23 +89,23 @@ func TimeNowNS() int64 {
 	return time.Now().UnixNano()
 }
 
-// TimeNowMS get now milliseconds from 1970-01-01
-func TimeNowMS() int64 {
-	return TimeNowNS() / int64(time.Millisecond)
+// timeNowMS get now milliseconds from 1970-01-01
+func timeNowMS() int64 {
+	return timeNowNS() / int64(time.Millisecond)
 }
 
-// TimeNowISOString get now iso string like this: 2019-09-09T09:47:16.180+08:00
-func TimeNowISOString() string {
+// timeNowISOString get now iso string like this: 2019-09-09T09:47:16.180+08:00
+func timeNowISOString() string {
 	ret := (*timeNow)(atomic.LoadPointer(&timeNowPointer))
 	if ret != nil {
 		return ret.timeISOString
 	}
-	return ConvertToIsoDateString(time.Now())
+	return convertToIsoDateString(time.Now())
 }
 
-// TimeSpanFrom get time.Duration from fromNS
-func TimeSpanFrom(startNS int64) time.Duration {
-	return time.Duration(TimeNowNS() - startNS)
+// timeSpanFrom get time.Duration from fromNS
+func timeSpanFrom(startNS int64) time.Duration {
+	return time.Duration(timeNowNS() - startNS)
 }
 
 // TimeSpanBetween get time.Duration between startNS and endNS
@@ -183,9 +183,9 @@ func convertOrdinalToString(n uint) string {
 	}
 }
 
-// ConvertToIsoDateString convert time.Time to iso string
+// convertToIsoDateString convert time.Time to iso string
 // return format "2019-09-09T09:47:16.180+08:00"
-func ConvertToIsoDateString(date time.Time) string {
+func convertToIsoDateString(date time.Time) string {
 	buf := make([]byte, 29, 29)
 	// copy template
 	copy(buf, defaultISODateBuffer)

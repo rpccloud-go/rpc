@@ -173,7 +173,7 @@ func (p *Logger) log(outputLevel int, tag string, msg string) {
 
 	if level&outputLevel > 0 {
 		sb := NewStringBuilder()
-		sb.AppendString(TimeNowISOString())
+		sb.AppendString(timeNowISOString())
 		sb.AppendString(tag)
 		sb.AppendString(msg)
 		sb.AppendByte('\n')

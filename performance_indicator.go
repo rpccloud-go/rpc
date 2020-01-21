@@ -21,7 +21,7 @@ func NewPerformanceIndicator() *rpcPerformanceIndicator {
 		failed:       0,
 		successArray: [10]int64{},
 		lastTotal:    0,
-		lastNS:       TimeNowNS(),
+		lastNS:       timeNowNS(),
 		originMap:    sync.Map{},
 	}
 }
