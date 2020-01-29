@@ -494,3 +494,18 @@ func TestWriteStringToFile(t *testing.T) {
 
 	_ = os.RemoveAll(dir)
 }
+
+func TestCheckRPCType(t *testing.T) {
+	assert := newAssert(t)
+
+	assert(checkRPCType(reflect.ValueOf(true).Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf(Int64(32)).Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf(Uint64(32)).Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf(Float64(32)).Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf("hello").Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf([]byte{}).Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf([10]byte{}).Type())).IsNotNil()
+	assert(checkRPCType(reflect.ValueOf([0]Int64{}).Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf([10]Int64{}).Type())).IsNil()
+	assert(checkRPCType(reflect.ValueOf(map[string]Int64{}).Type())).IsNil()
+}

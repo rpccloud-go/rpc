@@ -543,3 +543,38 @@ func writeStringToFile(s string, filePath string) error {
 
 	return ioutil.WriteFile(filePath, []byte(s), 0666)
 }
+
+func checkRPCType(tp reflect.Type) Error {
+	if tp == nil {
+		return nil
+	}
+
+	switch tp {
+	case boolType:
+		return nil
+	case int64Type:
+		return nil
+	case uint64Type:
+		return nil
+	case float64Type:
+		return nil
+	case stringType:
+		return nil
+	case bytesType:
+		return nil
+	default:
+		switch tp.Kind() {
+		case reflect.Slice:
+			return checkRPCType(tp.Elem())
+		case reflect.Array:
+			return checkRPCType(tp.Elem())
+		case reflect.Map:
+			if tp.Key().Kind() != reflect.String {
+				return NewError(fmt.Sprintf("%s map key must be string kind", tp.String()))
+			}
+			return checkRPCType(tp.Elem())
+		default:
+			return NewError(fmt.Sprintf("%s is not rpc type", tp.String()))
+		}
+	}
+}
